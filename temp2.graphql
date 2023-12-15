@@ -1,0 +1,39 @@
+mutation CreateSettings {
+    createSettings(
+        input: {
+            id: "settings"
+            duration: ""
+            expiry: ""
+            comments: false
+            ticketNo: false
+            approval: false
+            modifiedBy: ""
+            sesNotificationsEnabled: false
+            snsNotificationsEnabled: false
+            slackNotificationsEnabled: false
+            sesSourceEmail: ""
+            slackToken: ""
+            sesSourceArn: ""
+            teamAdminGroup: ""
+            teamAuditorGroup: ""
+        }
+    ) {
+        id
+        duration
+        expiry
+        comments
+        ticketNo
+        approval
+        modifiedBy
+        sesNotificationsEnabled
+        snsNotificationsEnabled
+        slackNotificationsEnabled
+        sesSourceEmail
+        sesSourceArn
+        slackToken
+        teamAdminGroup
+        teamAuditorGroup
+        createdAt
+        updatedAt
+    }
+}

@@ -1,4 +1,4 @@
-package setting
+package awsteam
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 )
 
 type GetSettingsInput struct {
-	ID *string
+	Id *string
 }
 
 type GetSettingsOutput struct {
@@ -18,8 +18,8 @@ func (client *Client) GetSettings(ctx context.Context, in *GetSettingsInput) (*G
 	out := &GetSettingsOutput{}
 	var id string
 
-	if in.ID != nil {
-		id = *in.ID
+	if in.Id != nil {
+		id = *in.Id
 	} else {
 		id = "settings"
 	}

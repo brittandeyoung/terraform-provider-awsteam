@@ -3,10 +3,12 @@ module github.com/brittandeyoung/terraform-provider-awsteam
 go 1.20
 
 require (
+	github.com/aws/smithy-go v1.19.0
 	github.com/hashicorp/go-changelog v0.0.0-20230630083008-522d403eacf1
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
 	github.com/hashicorp/terraform-plugin-go v0.19.1
+	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.6.0
 	github.com/hasura/go-graphql-client v0.10.0
 	golang.org/x/oauth2 v0.15.0
@@ -52,7 +54,6 @@ require (
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.19.0 // indirect
 	github.com/hashicorp/terraform-json v0.18.0 // indirect
-	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.30.0 // indirect
 	github.com/hashicorp/terraform-registry-address v0.2.3 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
