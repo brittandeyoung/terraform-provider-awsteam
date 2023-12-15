@@ -10,7 +10,6 @@ import (
 
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/envvar"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/service/setting"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -103,13 +102,6 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	config.Build()
 
-	// Now we can create the graph client with the authentication token
-	// meta := &awsteam.Client{
-	// 	Client:        config.NewClient(ctx),
-	// 	Config:        config,
-	// 	GraphEndpoint: config.GraphEndpoint,
-	// 	Token:         config.Token,
-	// }
 	meta := config.NewClient(ctx)
 
 	resp.DataSourceData = meta
@@ -117,12 +109,14 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 }
 
 func (p *AWSTEAMProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewSettingsResource,
+	}
 }
 
 func (p *AWSTEAMProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		setting.NewSettingSettingsDataSource,
+		NewSettingsDataSource,
 	}
 }
 
