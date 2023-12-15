@@ -3,12 +3,12 @@
 page_title: "awsteam_settings Resource - terraform-provider-awsteam"
 subcategory: ""
 description: |-
-  Allows configuration of the setting settings within an AWS TEAM deployment.
+  Allows configuration of the settings within an AWS TEAM deployment.
 ---
 
 # awsteam_settings (Resource)
 
-Allows configuration of the setting settings within an AWS TEAM deployment.
+Allows configuration of the settings within an AWS TEAM deployment.
 
 ## Example Usage
 

@@ -55,7 +55,7 @@ func (r *SettingsResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Allows configuration of the setting settings within an AWS TEAM deployment.",
+		MarkdownDescription: "Allows configuration of the settings within an AWS TEAM deployment.",
 
 		Attributes: map[string]schema.Attribute{
 			"approval": schema.BoolAttribute{

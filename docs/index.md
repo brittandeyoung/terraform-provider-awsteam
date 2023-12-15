@@ -3,12 +3,12 @@
 page_title: "awsteam Provider"
 subcategory: ""
 description: |-
-  
+  The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
 ---
 
 # awsteam Provider
 
-
+The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
 
 ## Example Usage
 

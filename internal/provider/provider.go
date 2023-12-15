@@ -51,6 +51,8 @@ func (p *AWSTEAMProvider) Metadata(ctx context.Context, req provider.MetadataReq
 
 func (p *AWSTEAMProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.",
+
 		Attributes: map[string]schema.Attribute{
 			"client_id": schema.StringAttribute{
 				MarkdownDescription: "The client id for authenticating to the oauth2 token endpoint.",
