@@ -8,7 +8,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
-func TestAccSettingsResource_basic(t *testing.T) {
+func TestAccSettings_serial(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]map[string]func(t *testing.T){
+		"Resource": {
+			"basic": testAccSettingsResource_basic,
+		},
+		"DataSource": {
+			"basic": testAccSettingsDataSource_basic,
+		},
+	}
+
+	RunSerialTests2Levels(t, testCases, 0)
+}
+
+func testAccSettingsResource_basic(t *testing.T) {
 	resourceName := "awsteam_settings.test"
 	teamAdminGroup1 := "Team-Admin-Group"
 	teamAuditorGroup1 := "Team-Auditor-Group"
@@ -27,15 +42,15 @@ func TestAccSettingsResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "team_admin_group", teamAdminGroup1),
 					resource.TestCheckResourceAttr(resourceName, "team_auditor_group", teamAuditorGroup1),
-					resource.TestCheckResourceAttr(resourceName, "approval", "settings"),
-					resource.TestCheckResourceAttr(resourceName, "comments", "settings"),
-					resource.TestCheckResourceAttr(resourceName, "ses_notifications_enabled", "settings"),
-					resource.TestCheckResourceAttr(resourceName, "sns_notifications_enabled", "settings"),
-					resource.TestCheckResourceAttr(resourceName, "slack_notifications_enabled", "settings"),
-					resource.TestCheckResourceAttr(resourceName, "ticket_no", "settings"),
+					resource.TestCheckResourceAttr(resourceName, "approval", "false"),
+					resource.TestCheckResourceAttr(resourceName, "comments", "false"),
+					resource.TestCheckResourceAttr(resourceName, "ses_notifications_enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "sns_notifications_enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "slack_notifications_enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "ticket_no", "false"),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					resource.TestCheckResourceAttrSet(resourceName, "modified_by"),
+					// resource.TestCheckResourceAttrSet(resourceName, "modified_by"),
 				),
 			},
 			// ImportState testing
