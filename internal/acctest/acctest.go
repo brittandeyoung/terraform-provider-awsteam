@@ -1,4 +1,4 @@
-package provider
+package acctest
 
 import (
 	"testing"
