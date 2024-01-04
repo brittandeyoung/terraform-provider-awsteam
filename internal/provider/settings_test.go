@@ -3,13 +3,25 @@ package provider
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"testing"
 
+	"github.com/brittandeyoung/terraform-provider-awsteam/internal/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
+// AWS TEAM Only allows one settings to be defined at a time.
 func TestAccSettings_serial(t *testing.T) {
 	t.Parallel()
+
+	// AWS TEAM only allows settings to be defined once, Running these tests requires the settings to be deleted from the environment before running.
+	// Added an environment variable that will enable us to control when these tests run.
+	// To run these tests set the environment variable like so: export AWSTEAM_RUN_SETTINGS_TESTS="true"
+	key := "AWSTEAM_RUN_SETTINGS_TESTS"
+	vifId := os.Getenv(key)
+	if vifId != "true" {
+		t.Skipf("Skipping Settings Tests, Environment variable %s is not set to true", key)
+	}
 
 	testCases := map[string]map[string]func(t *testing.T){
 		"Resource": {
@@ -20,7 +32,7 @@ func TestAccSettings_serial(t *testing.T) {
 		},
 	}
 
-	RunSerialTests2Levels(t, testCases, 0)
+	acctest.RunSerialTests2Levels(t, testCases, 0)
 }
 
 func testAccSettingsResource_basic(t *testing.T) {
