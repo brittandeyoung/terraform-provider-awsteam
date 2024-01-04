@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ---
 
 ### New
+* Resource: `settings` [#4](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/4)
 
 ### Changes
 
