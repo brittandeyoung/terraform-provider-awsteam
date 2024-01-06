@@ -23,27 +23,6 @@ type SettingsDataSource struct {
 	client *awsteam.Client
 }
 
-// SettingsDataSourceModel describes the data source data model.
-type SettingsDataSourceModel struct {
-	Approval                  types.Bool   `tfsdk:"approval"`
-	Comments                  types.Bool   `tfsdk:"comments"`
-	Id                        types.String `tfsdk:"id"`
-	Duration                  types.Int64  `tfsdk:"duration"`
-	Expiry                    types.Int64  `tfsdk:"expiry"`
-	SesNotificationsEnabled   types.Bool   `tfsdk:"ses_notifications_enabled"`
-	SnsNotificationsEnabled   types.Bool   `tfsdk:"sns_notifications_enabled"`
-	SlackNotificationsEnabled types.Bool   `tfsdk:"slack_notifications_enabled"`
-	SesSourceEmail            types.String `tfsdk:"ses_source_email"`
-	SesSourceArn              types.String `tfsdk:"ses_source_arn"`
-	SlackToken                types.String `tfsdk:"slack_token"`
-	TeamAdminGroup            types.String `tfsdk:"team_admin_group"`
-	TeamAuditorGroup          types.String `tfsdk:"team_auditor_group"`
-	TicketNo                  types.Bool   `tfsdk:"ticket_no"`
-	ModifiedBy                types.String `tfsdk:"modified_by"`
-	CreatedAt                 types.String `tfsdk:"created_at"`
-	UpdatedAt                 types.String `tfsdk:"updated_at"`
-}
-
 func (d *SettingsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_settings"
 }
@@ -147,7 +126,7 @@ func (d *SettingsDataSource) Configure(ctx context.Context, req datasource.Confi
 }
 
 func (d *SettingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data SettingsDataSourceModel
+	var data SettingsModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
