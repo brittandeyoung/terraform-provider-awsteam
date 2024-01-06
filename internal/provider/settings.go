@@ -29,8 +29,8 @@ type SettingsResource struct {
 	client *awsteam.Client
 }
 
-// SettingsResourceModel describes the data source data model.
-type SettingsResourceModel struct {
+// SettingsModel describes the data source data model.
+type SettingsModel struct {
 	Approval                  types.Bool   `tfsdk:"approval"`
 	Comments                  types.Bool   `tfsdk:"comments"`
 	Id                        types.String `tfsdk:"id"`
@@ -172,7 +172,7 @@ func (r *SettingsResource) Configure(ctx context.Context, req resource.Configure
 }
 
 func (r *SettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
 
@@ -237,7 +237,7 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 }
 
 func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -280,7 +280,7 @@ func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, r
 }
 
 func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var config, plan, state SettingsResourceModel
+	var config, plan, state SettingsModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 
@@ -364,7 +364,7 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 }
 
 func (r *SettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
 
