@@ -1,3 +1,5 @@
+TESTARGS                ?= "-run=TestAcc"
+
 default: testacc
 
 gen:
