@@ -118,6 +118,7 @@ func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional:            true,
 				Default:             stringdefault.StaticString(""),
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"team_admin_group": schema.StringAttribute{
 				MarkdownDescription: "Group of users responsible for managing TEAM administrative configurations",
