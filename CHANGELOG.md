@@ -8,17 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ---
 
 ### New
+* DataSource: `settings` [#4](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/4)
+* Resource: `settings` [#4](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/4)
 
 ### Changes
 
 ### Fixes
 
 ### Breaks
-
-
-## 0.1.0 - (2024-01-06)
----
-
-### New
-* Resource: `settings` [#4](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/4)
-* DataSource: `settings` [#4](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/4)
