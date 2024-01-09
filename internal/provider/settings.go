@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &SettingsResource{}
 var _ resource.ResourceWithImportState = &SettingsResource{}
 
@@ -24,12 +23,10 @@ func NewSettingsResource() resource.Resource {
 	return &SettingsResource{}
 }
 
-// SettingsResource defines the resource implementation.
 type SettingsResource struct {
 	client *awsteam.Client
 }
 
-// SettingsModel describes the data source data model.
 type SettingsModel struct {
 	Approval                  types.Bool   `tfsdk:"approval"`
 	Comments                  types.Bool   `tfsdk:"comments"`
@@ -239,7 +236,6 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data SettingsModel
 
-	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
