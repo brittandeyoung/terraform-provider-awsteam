@@ -18,6 +18,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
+const (
+	ProviderName = "awsteam"
+)
+
 type AWSTEAMClient struct {
 	Client        *awsteam.Client
 	Config        *awsteam.Config
@@ -25,18 +29,12 @@ type AWSTEAMClient struct {
 	GraphEndpoint string
 }
 
-// Ensure AWSTEAMProvider satisfies various provider interfaces.
 var _ provider.Provider = &AWSTEAMProvider{}
 
-// AWSTEAMProvider defines the provider implementation.
 type AWSTEAMProvider struct {
-	// version is set to the provider version on release, "dev" when the
-	// provider is built and ran locally, and "test" when running acceptance
-	// testing.
 	version string
 }
 
-// AWSTEAMProviderModel describes the provider data model.
 type AWSTEAMProviderModel struct {
 	ClientId      types.String `tfsdk:"client_id"`
 	ClientSecret  types.String `tfsdk:"client_secret"`
@@ -45,7 +43,7 @@ type AWSTEAMProviderModel struct {
 }
 
 func (p *AWSTEAMProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "awsteam"
+	resp.TypeName = ProviderName
 	resp.Version = p.version
 }
 
@@ -91,9 +89,6 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	// Configure the AWS TEAM client
-	// First we need to get a token from the oath endpoint
 
 	config := &awsteam.Config{
 		ClientId:      clientId,
