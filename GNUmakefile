@@ -1,7 +1,16 @@
+PKG_NAME            ?= internal
+TESTARGS                ?= "-run=TestAcc"
+
 default: testacc
 
 gen:
 	go generate
+
+golangci-lint: ## Lint Go source (via golangci-lint)
+	@echo "==> Checking source code with golangci-lint..."
+	@golangci-lint run \
+		--config .golangci.yml \
+		./$(PKG_NAME)/...
 
 test:
 	go test ./...
@@ -12,5 +21,6 @@ testacc:
 
 .PHONY: 
 	- generate
+	- golangci-lint
 	- testacc
 	- test

@@ -10,12 +10,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &SettingsResource{}
 var _ resource.ResourceWithImportState = &SettingsResource{}
 
@@ -23,13 +23,11 @@ func NewSettingsResource() resource.Resource {
 	return &SettingsResource{}
 }
 
-// SettingsResource defines the resource implementation.
 type SettingsResource struct {
 	client *awsteam.Client
 }
 
-// SettingsResourceModel describes the data source data model.
-type SettingsResourceModel struct {
+type SettingsModel struct {
 	Approval                  types.Bool   `tfsdk:"approval"`
 	Comments                  types.Bool   `tfsdk:"comments"`
 	Id                        types.String `tfsdk:"id"`
@@ -94,10 +92,14 @@ func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaReques
 			"ses_source_arn": schema.StringAttribute{
 				MarkdownDescription: "ARN of a verified SES identity in another AWS account. Must be configured to authorize sending mail from the TEAM account.",
 				Optional:            true,
+				Default:             stringdefault.StaticString(""),
+				Computed:            true,
 			},
 			"ses_source_email": schema.StringAttribute{
 				MarkdownDescription: "Email address to send notifications from. Must be verified in SES.",
 				Optional:            true,
+				Default:             stringdefault.StaticString(""),
+				Computed:            true,
 			},
 			"sns_notifications_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Send notifications via Amazon SNS. Once enabled, create a subscription to the SNS topic (TeamNotifications-main) in the TEAM account.",
@@ -114,6 +116,9 @@ func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaReques
 			"slack_token": schema.StringAttribute{
 				MarkdownDescription: "Slack OAuth token associated with the installed app.",
 				Optional:            true,
+				Default:             stringdefault.StaticString(""),
+				Computed:            true,
+				Sensitive:           true,
 			},
 			"team_admin_group": schema.StringAttribute{
 				MarkdownDescription: "Group of users responsible for managing TEAM administrative configurations",
@@ -165,7 +170,7 @@ func (r *SettingsResource) Configure(ctx context.Context, req resource.Configure
 }
 
 func (r *SettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
 
@@ -230,9 +235,8 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 }
 
 func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
-	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
@@ -273,7 +277,7 @@ func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, r
 }
 
 func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var config, plan, state SettingsResourceModel
+	var config, plan, state SettingsModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 
@@ -357,7 +361,7 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 }
 
 func (r *SettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data SettingsResourceModel
+	var data SettingsModel
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
 
@@ -367,15 +371,12 @@ func (r *SettingsResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	in := &awsteam.DeleteSettingsInput{}
 
-	out, err := r.client.DeleteSettings(ctx, in)
+	_, err := r.client.DeleteSettings(ctx, in)
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read settings, got error: %s", err))
 		return
 	}
-
-	fmt.Println(out)
-
 }
 
 func (r *SettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

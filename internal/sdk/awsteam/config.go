@@ -46,7 +46,7 @@ type Config struct {
 func (config *Config) Build() {
 	// Configure the AWS TEAM client
 	// First we need to get a token from the oath endpoint
-	authPayload := strings.NewReader(fmt.Sprintf(`grant_type=client_credentials&client_id=%s&client_secret=%s`, config.ClientId, config.ClientSecret))
+	authPayload := strings.NewReader(fmt.Sprintf(`grant_type=client_credentials&scope=api%%2Fadmin&client_id=%s&client_secret=%s`, config.ClientId, config.ClientSecret))
 
 	authClient := &http.Client{}
 	authReq, err := http.NewRequest("POST", config.TokenEndpoint, authPayload)
