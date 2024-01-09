@@ -62,23 +62,19 @@ func testAccSettingsResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ticket_no", "false"),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					// resource.TestCheckResourceAttrSet(resourceName, "modified_by"),
 				),
 			},
-			// ImportState testing
 			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
-			// Update and Read testing
 			{
 				Config: testAccSettingsResourceConfig(teamAdminGroup2, teamAuditorGroup2, duration, expiry),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "team_admin_group", teamAdminGroup2),
 					resource.TestCheckResourceAttr(resourceName, "team_auditor_group", teamAuditorGroup2)),
 			},
-			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
