@@ -39,7 +39,7 @@ resource "awsteam_settings" "this" {
 - `ses_source_arn` (String) ARN of a verified SES identity in another AWS account. Must be configured to authorize sending mail from the TEAM account.
 - `ses_source_email` (String) Email address to send notifications from. Must be verified in SES.
 - `slack_notifications_enabled` (Boolean) Enable to send notifications directly to users in Slack via a Slack bot app.
-- `slack_token` (String) Slack OAuth token associated with the installed app.
+- `slack_token` (String, Sensitive) Slack OAuth token associated with the installed app.
 - `sns_notifications_enabled` (Boolean) Send notifications via Amazon SNS. Once enabled, create a subscription to the SNS topic (TeamNotifications-main) in the TEAM account.
 - `ticket_no` (Boolean) Determines if ticket number field is mandatory for elevated access requests
 
