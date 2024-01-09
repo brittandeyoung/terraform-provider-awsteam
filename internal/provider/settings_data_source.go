@@ -11,14 +11,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &SettingsDataSource{}
 
 func NewSettingsDataSource() datasource.DataSource {
 	return &SettingsDataSource{}
 }
 
-// SettingsDataSource defines the data source implementation.
 type SettingsDataSource struct {
 	client *awsteam.Client
 }
@@ -29,7 +27,6 @@ func (d *SettingsDataSource) Metadata(ctx context.Context, req datasource.Metada
 
 func (d *SettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Provides a data source for AWS TEAM Settings",
 
 		Attributes: map[string]schema.Attribute{
@@ -106,7 +103,6 @@ func (d *SettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 }
 
 func (d *SettingsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
 	}
@@ -128,7 +124,6 @@ func (d *SettingsDataSource) Configure(ctx context.Context, req datasource.Confi
 func (d *SettingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data SettingsModel
 
-	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
