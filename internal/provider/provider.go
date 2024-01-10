@@ -107,6 +107,8 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *AWSTEAMProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewApproversAccountResource,
+		NewApproversOUResource,
 		NewSettingsResource,
 	}
 }
