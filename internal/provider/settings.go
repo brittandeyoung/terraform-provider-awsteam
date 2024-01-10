@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -134,18 +135,9 @@ func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaReques
 				Default:             booldefault.StaticBool(false),
 				Computed:            true,
 			},
-			"modified_by": schema.StringAttribute{
-				MarkdownDescription: "The user to last modify the settings",
-				Computed:            true,
-			},
-			"created_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time that the setting was created",
-				Computed:            true,
-			},
-			"updated_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time of the last time the settings were updated",
-				Computed:            true,
-			},
+			names.AttrModifiedBy: ModifiedByAttribute(),
+			names.AttrCreatedAt:  CreatedAtAttribute(),
+			names.AttrUpdatedAt:  UpdatedAtAttribute(),
 		},
 	}
 }
@@ -189,6 +181,7 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 		TicketNo:                  data.TicketNo.ValueBoolPointer(),
 		Duration:                  data.Duration.ValueInt64Pointer(),
 		Expiry:                    data.Expiry.ValueInt64Pointer(),
+		ModifiedBy:                data.ModifiedBy.ValueStringPointer(),
 	}
 
 	if !data.SesSourceArn.IsNull() {
@@ -210,25 +203,17 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	settings := out.Setting
-	data.Id = types.StringPointerValue(settings.Id)
-	data.Approval = types.BoolPointerValue(settings.Approval)
-	data.Comments = types.BoolPointerValue(settings.Comments)
-	data.CreatedAt = types.StringPointerValue(settings.CreatedAt)
-	data.Duration = types.Int64PointerValue(settings.Duration)
-	data.ModifiedBy = types.StringPointerValue(settings.ModifiedBy)
-	data.Expiry = types.Int64PointerValue(settings.Expiry)
-	data.SesNotificationsEnabled = types.BoolPointerValue(settings.SesNotificationsEnabled)
-	data.SesSourceArn = types.StringPointerValue(settings.SesSourceArn)
-	data.SesSourceEmail = types.StringPointerValue(settings.SesSourceEmail)
-	data.SlackNotificationsEnabled = types.BoolPointerValue(settings.SlackNotificationsEnabled)
-	data.SlackToken = types.StringPointerValue(settings.SlackToken)
-	data.SnsNotificationsEnabled = types.BoolPointerValue(settings.SnsNotificationsEnabled)
-	data.TeamAdminGroup = types.StringPointerValue(settings.TeamAdminGroup)
-	data.TeamAuditorGroup = types.StringPointerValue(settings.TeamAuditorGroup)
-	data.TicketNo = types.BoolPointerValue(settings.TicketNo)
-	data.UpdatedAt = types.StringPointerValue(settings.UpdatedAt)
+	if out == nil {
+		resp.Diagnostics.AddError("Create Error", "Received empty Settings.")
+		return
+	}
 
+	if out.Settings == nil {
+		resp.Diagnostics.AddError("Create Error", "Received empty Settings.")
+		return
+	}
+
+	data.flatten(out.Settings)
 	tflog.Trace(ctx, "created settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -252,25 +237,17 @@ func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	settings := out.Setting
-	data.Id = types.StringPointerValue(settings.Id)
-	data.Approval = types.BoolPointerValue(settings.Approval)
-	data.Comments = types.BoolPointerValue(settings.Comments)
-	data.CreatedAt = types.StringPointerValue(settings.CreatedAt)
-	data.Duration = types.Int64PointerValue(settings.Duration)
-	data.ModifiedBy = types.StringPointerValue(settings.ModifiedBy)
-	data.Expiry = types.Int64PointerValue(settings.Expiry)
-	data.SesNotificationsEnabled = types.BoolPointerValue(settings.SesNotificationsEnabled)
-	data.SesSourceArn = types.StringPointerValue(settings.SesSourceArn)
-	data.SesSourceEmail = types.StringPointerValue(settings.SesSourceEmail)
-	data.SlackNotificationsEnabled = types.BoolPointerValue(settings.SlackNotificationsEnabled)
-	data.SlackToken = types.StringPointerValue(settings.SlackToken)
-	data.SnsNotificationsEnabled = types.BoolPointerValue(settings.SnsNotificationsEnabled)
-	data.TeamAdminGroup = types.StringPointerValue(settings.TeamAdminGroup)
-	data.TeamAuditorGroup = types.StringPointerValue(settings.TeamAuditorGroup)
-	data.TicketNo = types.BoolPointerValue(settings.TicketNo)
-	data.UpdatedAt = types.StringPointerValue(settings.UpdatedAt)
+	if out == nil {
+		resp.Diagnostics.AddError("Read Error", "Received empty Settings.")
+		return
+	}
 
+	if out.Settings == nil {
+		resp.Diagnostics.AddError("Read Error", "Received empty Settings.")
+		return
+	}
+
+	data.flatten(out.Settings)
 	tflog.Trace(ctx, "read settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -290,7 +267,7 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -298,31 +275,32 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 	updateRequired := false
 
 	in := &awsteam.UpdateSettingsInput{
-		TeamAdminGroup:            config.TeamAdminGroup.ValueStringPointer(),
-		TeamAuditorGroup:          config.TeamAuditorGroup.ValueStringPointer(),
-		Approval:                  config.Approval.ValueBoolPointer(),
-		Comments:                  config.Comments.ValueBoolPointer(),
-		SesNotificationsEnabled:   config.SesNotificationsEnabled.ValueBoolPointer(),
-		SnsNotificationsEnabled:   config.SnsNotificationsEnabled.ValueBoolPointer(),
-		SlackNotificationsEnabled: config.SlackNotificationsEnabled.ValueBoolPointer(),
-		TicketNo:                  config.TicketNo.ValueBoolPointer(),
-		Duration:                  config.Duration.ValueInt64Pointer(),
-		Expiry:                    config.Expiry.ValueInt64Pointer(),
+		TeamAdminGroup:            plan.TeamAdminGroup.ValueStringPointer(),
+		TeamAuditorGroup:          plan.TeamAuditorGroup.ValueStringPointer(),
+		Approval:                  plan.Approval.ValueBoolPointer(),
+		Comments:                  plan.Comments.ValueBoolPointer(),
+		SesNotificationsEnabled:   plan.SesNotificationsEnabled.ValueBoolPointer(),
+		SnsNotificationsEnabled:   plan.SnsNotificationsEnabled.ValueBoolPointer(),
+		SlackNotificationsEnabled: plan.SlackNotificationsEnabled.ValueBoolPointer(),
+		TicketNo:                  plan.TicketNo.ValueBoolPointer(),
+		Duration:                  plan.Duration.ValueInt64Pointer(),
+		Expiry:                    plan.Expiry.ValueInt64Pointer(),
+		ModifiedBy:                plan.ModifiedBy.ValueStringPointer(),
 	}
 
 	if !plan.SesSourceArn.IsUnknown() && !state.SesSourceArn.Equal(plan.SesSourceArn) {
 		updateRequired = true
-		in.SesSourceArn = config.SesSourceArn.ValueStringPointer()
+		in.SesSourceArn = plan.SesSourceArn.ValueStringPointer()
 	}
 
 	if !plan.SesSourceEmail.IsUnknown() && !state.SesSourceEmail.Equal(plan.SesSourceEmail) {
 		updateRequired = true
-		in.SesSourceEmail = config.SesSourceEmail.ValueStringPointer()
+		in.SesSourceEmail = plan.SesSourceEmail.ValueStringPointer()
 	}
 
 	if !plan.SlackToken.IsUnknown() && !state.SlackToken.Equal(plan.SlackToken) {
 		updateRequired = true
-		in.SlackToken = config.SlackToken.ValueStringPointer()
+		in.SlackToken = plan.SlackToken.ValueStringPointer()
 	}
 
 	if updateRequired {
@@ -334,30 +312,23 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 			return
 		}
 
-		settings := out.Setting
-		state.Id = types.StringPointerValue(settings.Id)
-		state.Approval = types.BoolPointerValue(settings.Approval)
-		state.Comments = types.BoolPointerValue(settings.Comments)
-		state.CreatedAt = types.StringPointerValue(settings.CreatedAt)
-		state.Duration = types.Int64PointerValue(settings.Duration)
-		state.ModifiedBy = types.StringPointerValue(settings.ModifiedBy)
-		state.Expiry = types.Int64PointerValue(settings.Expiry)
-		state.SesNotificationsEnabled = types.BoolPointerValue(settings.SesNotificationsEnabled)
-		state.SesSourceArn = types.StringPointerValue(settings.SesSourceArn)
-		state.SesSourceEmail = types.StringPointerValue(settings.SesSourceEmail)
-		state.SlackNotificationsEnabled = types.BoolPointerValue(settings.SlackNotificationsEnabled)
-		state.SlackToken = types.StringPointerValue(settings.SlackToken)
-		state.SnsNotificationsEnabled = types.BoolPointerValue(settings.SnsNotificationsEnabled)
-		state.TeamAdminGroup = types.StringPointerValue(settings.TeamAdminGroup)
-		state.TeamAuditorGroup = types.StringPointerValue(settings.TeamAuditorGroup)
-		state.TicketNo = types.BoolPointerValue(settings.TicketNo)
-		state.UpdatedAt = types.StringPointerValue(settings.UpdatedAt)
+		if out == nil {
+			resp.Diagnostics.AddError("Update Error", "Received empty Settings.")
+			return
+		}
+
+		if out.Settings == nil {
+			resp.Diagnostics.AddError("Update Error", "Received empty Settings.")
+			return
+		}
+
+		plan.flatten(out.Settings)
 
 		tflog.Trace(ctx, "updated settings resource")
 
 	}
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
 func (r *SettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
@@ -381,4 +352,24 @@ func (r *SettingsResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *SettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (d *SettingsModel) flatten(out *awsteam.Settings) {
+	d.Id = types.StringPointerValue(out.Id)
+	d.Approval = types.BoolPointerValue(out.Approval)
+	d.Comments = types.BoolPointerValue(out.Comments)
+	d.CreatedAt = types.StringPointerValue(out.CreatedAt)
+	d.Duration = types.Int64PointerValue(out.Duration)
+	d.ModifiedBy = types.StringPointerValue(out.ModifiedBy)
+	d.Expiry = types.Int64PointerValue(out.Expiry)
+	d.SesNotificationsEnabled = types.BoolPointerValue(out.SesNotificationsEnabled)
+	d.SesSourceArn = types.StringPointerValue(out.SesSourceArn)
+	d.SesSourceEmail = types.StringPointerValue(out.SesSourceEmail)
+	d.SlackNotificationsEnabled = types.BoolPointerValue(out.SlackNotificationsEnabled)
+	d.SlackToken = types.StringPointerValue(out.SlackToken)
+	d.SnsNotificationsEnabled = types.BoolPointerValue(out.SnsNotificationsEnabled)
+	d.TeamAdminGroup = types.StringPointerValue(out.TeamAdminGroup)
+	d.TeamAuditorGroup = types.StringPointerValue(out.TeamAuditorGroup)
+	d.TicketNo = types.BoolPointerValue(out.TicketNo)
+	d.UpdatedAt = types.StringPointerValue(out.UpdatedAt)
 }
