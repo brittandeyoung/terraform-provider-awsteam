@@ -11,7 +11,7 @@ type DeleteSettingsInput struct {
 }
 
 type DeleteSettingsOutput struct {
-	Setting *Settings `json:"deleteSettings"`
+	Settings *Settings `json:"deleteSettings"`
 }
 
 func (client *Client) DeleteSettings(ctx context.Context, in *DeleteSettingsInput) (*DeleteSettingsOutput, error) {
@@ -26,22 +26,6 @@ func (client *Client) DeleteSettings(ctx context.Context, in *DeleteSettingsInpu
 
 	q := fmt.Sprintf(`mutation DeleteSettings {
 		deleteSettings(input: { id: "%s" }) {
-			duration
-			expiry
-			comments
-			ticketNo
-			approval
-			modifiedBy
-			sesNotificationsEnabled
-			snsNotificationsEnabled
-			slackNotificationsEnabled
-			sesSourceEmail
-			sesSourceArn
-			slackToken
-			teamAdminGroup
-			teamAuditorGroup
-			createdAt
-			updatedAt
 			id
 		}
 	}	

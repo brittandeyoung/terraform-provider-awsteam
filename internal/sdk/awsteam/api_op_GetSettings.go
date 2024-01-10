@@ -11,7 +11,7 @@ type GetSettingsInput struct {
 }
 
 type GetSettingsOutput struct {
-	Setting *Settings `json:"getSettings"`
+	Settings *Settings `json:"getSettings"`
 }
 
 func (client *Client) GetSettings(ctx context.Context, in *GetSettingsInput) (*GetSettingsOutput, error) {
