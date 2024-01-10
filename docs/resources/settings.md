@@ -35,6 +35,7 @@ resource "awsteam_settings" "this" {
 
 - `approval` (Boolean) If disabled, approval will not be required for all elevated access requests. If enabled, approval requirement is managed in eligibility policy configuration.
 - `comments` (Boolean) Determines if comment field is mandatory for all elevated access requests.
+- `modified_by` (String) The user to last modify the item
 - `ses_notifications_enabled` (Boolean) Enable sending notifications via Amazon SES.
 - `ses_source_arn` (String) ARN of a verified SES identity in another AWS account. Must be configured to authorize sending mail from the TEAM account.
 - `ses_source_email` (String) Email address to send notifications from. Must be verified in SES.
@@ -45,7 +46,6 @@ resource "awsteam_settings" "this" {
 
 ### Read-Only
 
-- `created_at` (String) The date and time that the setting was created
+- `created_at` (String) The date and time that the item was created
 - `id` (String) The settings identifier
-- `modified_by` (String) The user to last modify the settings
-- `updated_at` (String) The date and time of the last time the settings were updated
+- `updated_at` (String) The date and time of the last time the item was updated

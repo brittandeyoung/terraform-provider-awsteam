@@ -23,11 +23,11 @@ data "awsteam_setting_settings" "this" {}
 
 - `approval` (Boolean) If disabled, approval will not be required for all elevated access requests. If enabled, approval requirement is managed in eligibility policy configuration.
 - `comments` (Boolean) Determines if comment field is mandatory for all elevated access requests.
-- `created_at` (String) The date and time that the setting was created
+- `created_at` (String) The date and time that the item was created
 - `duration` (Number) Default maximum request duration in hours.
 - `expiry` (Number) Number of time in hours before an unapproved TEAM request expires.
 - `id` (String) Settings identifier.
-- `modified_by` (String) The user to last modify the settings
+- `modified_by` (String) The user to last modify the item
 - `ses_notifications_enabled` (Boolean) Enable sending notifications via Amazon SES.
 - `ses_source_arn` (String) ARN of a verified SES identity in another AWS account. Must be configured to authorize sending mail from the TEAM account.
 - `ses_source_email` (String) Email address to send notifications from. Must be verified in SES.
@@ -37,4 +37,4 @@ data "awsteam_setting_settings" "this" {}
 - `team_admin_group` (String) Group of users responsible for managing TEAM administrative configurations
 - `team_auditor_group` (String) Group of users allowed to audit TEAM elevated access requests
 - `ticket_no` (Boolean) Determines if ticket number field is mandatory for elevated access requests
-- `updated_at` (String) The date and time of the last time the settings were updated
+- `updated_at` (String) The date and time of the last time the item was updated
