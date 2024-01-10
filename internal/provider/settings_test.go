@@ -48,7 +48,6 @@ func testAccSettingsResource_basic(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create and Read testing
 			{
 				Config: testAccSettingsResourceConfig(teamAdminGroup1, teamAuditorGroup1, duration, expiry),
 				Check: resource.ComposeAggregateTestCheckFunc(
