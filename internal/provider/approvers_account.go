@@ -41,15 +41,15 @@ type ApproversAccountResource struct {
 }
 
 type ApproversAccountModel struct {
-	Id            types.String `tfsdk:"id"`
-	AccountName   types.String `tfsdk:"account_name"`
-	Approvers     types.Set    `tfsdk:"approvers"`
-	GroupIds      types.Set    `tfsdk:"group_ids"`
-	AccountNumber types.Int64  `tfsdk:"account_number"`
-	TicketNo      types.String `tfsdk:"ticket_no"`
-	ModifiedBy    types.String `tfsdk:"modified_by"`
-	CreatedAt     types.String `tfsdk:"created_at"`
-	UpdatedAt     types.String `tfsdk:"updated_at"`
+	Id          types.String `tfsdk:"id"`
+	AccountId   types.Int64  `tfsdk:"account_id"`
+	AccountName types.String `tfsdk:"account_name"`
+	Approvers   types.Set    `tfsdk:"approvers"`
+	GroupIds    types.Set    `tfsdk:"group_ids"`
+	TicketNo    types.String `tfsdk:"ticket_no"`
+	ModifiedBy  types.String `tfsdk:"modified_by"`
+	CreatedAt   types.String `tfsdk:"created_at"`
+	UpdatedAt   types.String `tfsdk:"updated_at"`
 }
 
 func (r *ApproversAccountResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -63,13 +63,13 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "The approvers account number. This is the same as the account_number.",
+				MarkdownDescription: "The approvers account number. This is the same as the account_id.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"account_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_number.",
+				MarkdownDescription: "Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_id.",
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -81,7 +81,7 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 					),
 				},
 			},
-			"account_number": schema.Int64Attribute{
+			"account_id": schema.Int64Attribute{
 				MarkdownDescription: "The AWS account number the approvers policy will be applied to. This needs to match the account number of the name provided in account_name.",
 				Required:            true,
 				PlanModifiers: []planmodifier.Int64{
@@ -164,7 +164,7 @@ func (r *ApproversAccountResource) Create(ctx context.Context, req resource.Crea
 	}
 
 	in := &awsteam.CreateApproversInput{
-		Id:         ptr.String(fmt.Sprint(data.AccountNumber.ValueInt64())),
+		Id:         ptr.String(fmt.Sprint(data.AccountId.ValueInt64())),
 		Type:       ptr.String(ApproversAccountType),
 		Name:       data.AccountName.ValueStringPointer(),
 		Approvers:  approvers,
@@ -294,7 +294,7 @@ func (r *ApproversAccountResource) Update(ctx context.Context, req resource.Upda
 	}
 
 	if updateRequired {
-		in.Id = ptr.String(fmt.Sprint(plan.AccountNumber.ValueInt64()))
+		in.Id = ptr.String(fmt.Sprint(plan.AccountId.ValueInt64()))
 		in.Type = ptr.String(ApproversAccountType)
 		in.Name = plan.AccountName.ValueStringPointer()
 		in.Approvers = approvers
@@ -380,7 +380,7 @@ func (d *ApproversAccountModel) flatten(ctx context.Context, out *awsteam.Approv
 
 	d.Id = types.StringPointerValue(out.Id)
 	d.AccountName = types.StringPointerValue(out.Name)
-	d.AccountNumber = types.Int64Value(accountNumber)
+	d.AccountId = types.Int64Value(accountNumber)
 	d.Approvers = approversSet
 	d.GroupIds = groupIdsSet
 	d.TicketNo = types.StringPointerValue(out.TicketNo)
