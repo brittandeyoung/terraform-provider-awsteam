@@ -30,8 +30,8 @@ resource "awsteam_approvers_account" "this" {
 
 ### Required
 
-- `account_name` (String) Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_number.
-- `account_number` (Number) The AWS account number the approvers policy will be applied to. This needs to match the account number of the name provided in account_name.
+- `account_id` (Number) The AWS account number the approvers policy will be applied to. This needs to match the account number of the name provided in account_name.
+- `account_name` (String) Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_id.
 - `approvers` (Set of String) The list of group names that will be approvers for the OU. This needs to match the names of the ids provided in group_ids.
 - `group_ids` (Set of String) The list of group names that will be approvers for the OU. This needs to match the ids of the names provided in approvers.
 
@@ -43,5 +43,5 @@ resource "awsteam_approvers_account" "this" {
 ### Read-Only
 
 - `created_at` (String) The date and time that the item was created
-- `id` (String) The approvers account number. This is the same as the account_number.
+- `id` (String) The approvers account number. This is the same as the account_id.
 - `updated_at` (String) The date and time of the last time the item was updated
