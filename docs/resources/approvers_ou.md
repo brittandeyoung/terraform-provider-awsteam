@@ -37,11 +37,11 @@ resource "awsteam_approvers_ou" "this" {
 
 ### Optional
 
-- `modified_by` (String) The user to last modify the item
 - `ticket_no` (String) The Change Management system ticket system number.
 
 ### Read-Only
 
 - `created_at` (String) The date and time that the item was created
 - `id` (String) The approvers ou identifier. This is the same as the ou_id.
+- `modified_by` (String) The user to last modify the item
 - `updated_at` (String) The date and time of the last time the item was updated
