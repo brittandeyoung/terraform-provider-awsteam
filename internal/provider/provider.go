@@ -57,19 +57,19 @@ To use this provider, follow the [instructions to enable machine authentication]
 
 		Attributes: map[string]schema.Attribute{
 			"client_id": schema.StringAttribute{
-				MarkdownDescription: "The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable.",
+				MarkdownDescription: "The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"client_secret": schema.StringAttribute{
-				MarkdownDescription: "The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable.",
+				MarkdownDescription: "The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"graph_endpoint": schema.StringAttribute{
-				MarkdownDescription: "The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable.",
+				MarkdownDescription: "The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"token_endpoint": schema.StringAttribute{
-				MarkdownDescription: "The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable.",
+				MarkdownDescription: "The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 		},
