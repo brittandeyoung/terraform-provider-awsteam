@@ -29,7 +29,7 @@ type UpdateSettingsInput struct {
 }
 
 type UpdateSettingsOutput struct {
-	Setting *Settings `json:"updateSettings"`
+	Settings *Settings `json:"updateSettings"`
 }
 
 func (client *Client) UpdateSettings(ctx context.Context, in *UpdateSettingsInput) (*UpdateSettingsOutput, error) {

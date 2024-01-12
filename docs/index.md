@@ -3,12 +3,15 @@
 page_title: "awsteam Provider"
 subcategory: ""
 description: |-
-  The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+  The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+  To use this provider, follow the instructions to enable machine authentication https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
 ---
 
 # awsteam Provider
 
-The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+		
+To use this provider, follow the [instructions to enable machine authentication](https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html) on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
 
 ## Example Usage
 
@@ -26,7 +29,7 @@ provider "awsteam" {
 
 ### Optional
 
-- `client_id` (String) The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable.
-- `client_secret` (String) The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable.
-- `graph_endpoint` (String) The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable.
-- `token_endpoint` (String) The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable.
+- `client_id` (String) The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable. Attribute is required when not configured via environment variable.
+- `client_secret` (String) The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable. Attribute is required when not configured via environment variable.
+- `graph_endpoint` (String) The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.
+- `token_endpoint` (String) The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.

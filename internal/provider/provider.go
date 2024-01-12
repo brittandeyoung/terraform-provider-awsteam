@@ -49,23 +49,27 @@ func (p *AWSTEAMProvider) Metadata(ctx context.Context, req provider.MetadataReq
 
 func (p *AWSTEAMProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.",
+		MarkdownDescription: `
+The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+		
+To use this provider, follow the [instructions to enable machine authentication](https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html) on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
+		`,
 
 		Attributes: map[string]schema.Attribute{
 			"client_id": schema.StringAttribute{
-				MarkdownDescription: "The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable.",
+				MarkdownDescription: "The client id for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_ID` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"client_secret": schema.StringAttribute{
-				MarkdownDescription: "The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable.",
+				MarkdownDescription: "The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"graph_endpoint": schema.StringAttribute{
-				MarkdownDescription: "The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable.",
+				MarkdownDescription: "The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 			"token_endpoint": schema.StringAttribute{
-				MarkdownDescription: "The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable.",
+				MarkdownDescription: "The token endpoint for the oath2 authenticator for AWS TEAMS. This can also be defined by setting the `AWSTEAM_TOKEN_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
 			},
 		},
@@ -107,6 +111,8 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *AWSTEAMProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewApproversAccountResource,
+		NewApproversOUResource,
 		NewSettingsResource,
 	}
 }

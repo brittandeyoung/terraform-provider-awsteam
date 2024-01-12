@@ -24,12 +24,10 @@ type CreateSettingsInput struct {
 	TeamAuditorGroup          *string
 	TicketNo                  *bool
 	ModifiedBy                *string
-	CreatedAt                 *string
-	UpdatedAt                 *string
 }
 
 type CreateSettingsOutput struct {
-	Setting *Settings `json:"createSettings"`
+	Settings *Settings `json:"createSettings"`
 }
 
 func (client *Client) CreateSettings(ctx context.Context, in *CreateSettingsInput) (*CreateSettingsOutput, error) {

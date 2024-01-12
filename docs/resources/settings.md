@@ -45,7 +45,7 @@ resource "awsteam_settings" "this" {
 
 ### Read-Only
 
-- `created_at` (String) The date and time that the setting was created
+- `created_at` (String) The date and time that the item was created
 - `id` (String) The settings identifier
-- `modified_by` (String) The user to last modify the settings
-- `updated_at` (String) The date and time of the last time the settings were updated
+- `modified_by` (String) The user to last modify the item
+- `updated_at` (String) The date and time of the last time the item was updated

@@ -1,11 +1,11 @@
 package awsteam
 
-type Approver struct {
-	Id         *string   `json:"id"`
-	Name       *string   `json:"name"`
-	Type       *string   `json:"type"`
-	Approvers  []*string `json:"approvers"`
-	GroupIds   []*string `json:"groupIds"`
+type Approvers struct {
+	Id         *string   `json:"id"`        // "Account ID" or "OU id"
+	Name       *string   `json:"name"`      // Account Name or OU Name
+	Type       *string   `json:"type"`      // "Account" or "OU"
+	Approvers  []*string `json:"approvers"` // List of Group names that can approve
+	GroupIds   []*string `json:"groupIds"`  // list of group ids that can approve
 	TicketNo   *string   `json:"ticketNo"`
 	ModifiedBy *string   `json:"modifiedBy"`
 	CreatedAt  *string   `json:"createdAt"`

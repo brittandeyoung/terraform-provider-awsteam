@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -86,18 +86,9 @@ func (d *SettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				MarkdownDescription: "Determines if ticket number field is mandatory for elevated access requests",
 				Computed:            true,
 			},
-			"modified_by": schema.StringAttribute{
-				MarkdownDescription: "The user to last modify the settings",
-				Computed:            true,
-			},
-			"created_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time that the setting was created",
-				Computed:            true,
-			},
-			"updated_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time of the last time the settings were updated",
-				Computed:            true,
-			},
+			names.AttrModifiedBy: ModifiedByAttribute(),
+			names.AttrCreatedAt:  CreatedAtAttribute(),
+			names.AttrUpdatedAt:  UpdatedAtAttribute(),
 		},
 	}
 }
@@ -139,30 +130,12 @@ func (d *SettingsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	if out.Setting == nil {
+	if out.Settings == nil {
 		resp.Diagnostics.AddError("Client Error", "Settings does not exist")
 		return
 	}
 
-	settings := out.Setting
-	data.Id = types.StringPointerValue(settings.Id)
-	data.Approval = types.BoolPointerValue(settings.Approval)
-	data.Comments = types.BoolPointerValue(settings.Comments)
-	data.CreatedAt = types.StringPointerValue(settings.CreatedAt)
-	data.Duration = types.Int64PointerValue(settings.Duration)
-	data.ModifiedBy = types.StringPointerValue(settings.ModifiedBy)
-	data.Expiry = types.Int64PointerValue(settings.Expiry)
-	data.SesNotificationsEnabled = types.BoolPointerValue(settings.SesNotificationsEnabled)
-	data.SesSourceArn = types.StringPointerValue(settings.SesSourceArn)
-	data.SesSourceEmail = types.StringPointerValue(settings.SesSourceEmail)
-	data.SlackNotificationsEnabled = types.BoolPointerValue(settings.SlackNotificationsEnabled)
-	data.SlackToken = types.StringPointerValue(settings.SlackToken)
-	data.SnsNotificationsEnabled = types.BoolPointerValue(settings.SnsNotificationsEnabled)
-	data.TeamAdminGroup = types.StringPointerValue(settings.TeamAdminGroup)
-	data.TeamAuditorGroup = types.StringPointerValue(settings.TeamAuditorGroup)
-	data.TicketNo = types.BoolPointerValue(settings.TicketNo)
-	data.UpdatedAt = types.StringPointerValue(settings.UpdatedAt)
-
+	data.flatten(out.Settings)
 	tflog.Trace(ctx, "read settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
