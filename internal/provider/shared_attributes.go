@@ -7,14 +7,6 @@ import (
 func ModifiedByAttribute() schema.Attribute {
 	return schema.StringAttribute{
 		MarkdownDescription: "The user to last modify the item",
-		Optional:            true,
-		Computed:            true,
-	}
-}
-
-func ModifiedByAttributeComputedOnly() schema.Attribute {
-	return schema.StringAttribute{
-		MarkdownDescription: "The user to last modify the item",
 		Computed:            true,
 	}
 }

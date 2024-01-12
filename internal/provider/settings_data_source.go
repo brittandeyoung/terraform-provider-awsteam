@@ -86,7 +86,7 @@ func (d *SettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				MarkdownDescription: "Determines if ticket number field is mandatory for elevated access requests",
 				Computed:            true,
 			},
-			names.AttrModifiedBy: ModifiedByAttributeComputedOnly(),
+			names.AttrModifiedBy: ModifiedByAttribute(),
 			names.AttrCreatedAt:  CreatedAtAttribute(),
 			names.AttrUpdatedAt:  UpdatedAtAttribute(),
 		},
