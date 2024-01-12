@@ -3,12 +3,15 @@
 page_title: "awsteam Provider"
 subcategory: ""
 description: |-
-  The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+  The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+  To use this provider, follow the instructions to enable machine authentication https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
 ---
 
 # awsteam Provider
 
-The "awsteam" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+		
+To use this provider, follow the [instructions to enable machine authentication](https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html) on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
 
 ## Example Usage
 

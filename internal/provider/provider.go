@@ -49,7 +49,11 @@ func (p *AWSTEAMProvider) Metadata(ctx context.Context, req provider.MetadataReq
 
 func (p *AWSTEAMProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.",
+		MarkdownDescription: `
+The \"awsteam\" provider enables managing the configuration of Temporary elevated access management (TEAM) for AWS IAM Identity Center with terraform.
+		
+To use this provider, follow the [instructions to enable machine authentication](https://aws-samples.github.io/iam-identity-center-team/docs/deployment/configuration/cognito_machine_auth.html) on your TEAM deployment and retrieve the details of your deployment to be used for configuring this provider.
+		`,
 
 		Attributes: map[string]schema.Attribute{
 			"client_id": schema.StringAttribute{
