@@ -1,1 +1,1 @@
-data "awsteam_setting_settings" "this" {}
+data "awsteam_setting_settings" "example" {}

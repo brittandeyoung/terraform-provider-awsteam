@@ -1,4 +1,4 @@
-resource "awsteam_approvers_ou" "this" {
+resource "awsteam_approvers_ou" "example" {
   ou_id   = "ou-cxt3-2782ty5g"
   ou_name = "my-ou"
   approvers = [
