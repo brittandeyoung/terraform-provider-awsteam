@@ -13,7 +13,7 @@ Allows configuration of the settings within an AWS TEAM deployment.
 ## Example Usage
 
 ```terraform
-resource "awsteam_settings" "this" {
+resource "awsteam_settings" "example" {
   duration           = 5
   expiry             = 3
   team_admin_group   = "My-Team-Admin-Group"
@@ -49,3 +49,12 @@ resource "awsteam_settings" "this" {
 - `id` (String) The settings identifier
 - `modified_by` (String) The user to last modify the item
 - `updated_at` (String) The date and time of the last time the item was updated
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+# Import using settings ID, this is always "settings"
+terraform import awsteam_settings.example settings
+```

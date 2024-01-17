@@ -14,8 +14,8 @@ Allows configuration of approval policies for an aws account within an AWS TEAM 
 
 ```terraform
 resource "awsteam_approvers_account" "this" {
-  account_number = 123456789011
-  ou_name        = "my-account"
+  account_id   = 123456789011
+  account_name = "my-account"
   approvers = [
     "my-group-approvers@contoso.com"
   ]
@@ -30,8 +30,8 @@ resource "awsteam_approvers_account" "this" {
 
 ### Required
 
-- `account_id` (Number) The AWS account number the approvers policy will be applied to. This needs to match the account number of the name provided in account_name.
-- `account_name` (String) Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_id.
+- `account_id` (Number) The AWS account id the approvers policy will be applied to. This needs to match the account id of the name provided in account_name.
+- `account_name` (String) Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account id provided in account_id.
 - `approvers` (Set of String) The list of group names that will be approvers for the OU. This needs to match the names of the ids provided in group_ids.
 - `group_ids` (Set of String) The list of group names that will be approvers for the OU. This needs to match the ids of the names provided in approvers.
 
@@ -42,6 +42,15 @@ resource "awsteam_approvers_account" "this" {
 ### Read-Only
 
 - `created_at` (String) The date and time that the item was created
-- `id` (String) The approvers account number. This is the same as the account_id.
+- `id` (String) The approvers account id. This is the same as the account_id.
 - `modified_by` (String) The user to last modify the item
 - `updated_at` (String) The date and time of the last time the item was updated
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+# Import using AWS Account ID
+terraform import awsteam_approvers_account.example 123456789011
+```
