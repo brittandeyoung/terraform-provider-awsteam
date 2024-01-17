@@ -17,6 +17,14 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ### Breaks
 
 
+## 0.2.0 - (2024-01-17)
+---
+
+### New
+* Resource: `awsteam_eligibility_group` [#8](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/8)
+* Resource: `awsteam_eligibility_user` [#8](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/8)
+
+
 ## 0.1.0 - (2024-01-12)
 ---
 
