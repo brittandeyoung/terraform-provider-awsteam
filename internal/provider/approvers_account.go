@@ -63,13 +63,13 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "The approvers account number. This is the same as the account_id.",
+				MarkdownDescription: "The approvers account id. This is the same as the account_id.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"account_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account number provided in account_id.",
+				MarkdownDescription: "Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account id provided in account_id.",
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -82,7 +82,7 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"account_id": schema.Int64Attribute{
-				MarkdownDescription: "The AWS account number the approvers policy will be applied to. This needs to match the account number of the name provided in account_name.",
+				MarkdownDescription: "The AWS account id the approvers policy will be applied to. This needs to match the account id of the name provided in account_name.",
 				Required:            true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplace(),
