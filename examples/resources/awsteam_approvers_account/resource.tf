@@ -1,4 +1,4 @@
-resource "awsteam_approvers_account" "this" {
+resource "awsteam_approvers_account" "example" {
   account_id   = 123456789011
   account_name = "my-account"
   approvers = [

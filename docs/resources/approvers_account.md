@@ -13,7 +13,7 @@ Allows configuration of approval policies for an aws account within an AWS TEAM 
 ## Example Usage
 
 ```terraform
-resource "awsteam_approvers_account" "this" {
+resource "awsteam_approvers_account" "example" {
   account_id   = 123456789011
   account_name = "my-account"
   approvers = [

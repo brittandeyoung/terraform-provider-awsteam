@@ -13,7 +13,7 @@ Allows configuration of eligibility policies for an aws iam identity center grou
 ## Example Usage
 
 ```terraform
-resource "awsteam_eligibility_user" "example" {
+resource "awsteam_eligibility_group" "example" {
   group_name        = "my-group@contoso.com"
   approval_required = true
   duration          = 5
