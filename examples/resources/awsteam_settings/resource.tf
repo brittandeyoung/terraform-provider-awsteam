@@ -1,4 +1,4 @@
-resource "awsteam_settings" "this" {
+resource "awsteam_settings" "example" {
   duration           = 5
   expiry             = 3
   team_admin_group   = "My-Team-Admin-Group"

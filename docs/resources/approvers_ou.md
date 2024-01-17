@@ -13,7 +13,7 @@ Allows configuration of approval policies for an OU within an AWS TEAM deploymen
 ## Example Usage
 
 ```terraform
-resource "awsteam_approvers_ou" "this" {
+resource "awsteam_approvers_ou" "example" {
   ou_id   = "ou-cxt3-2782ty5g"
   ou_name = "my-ou"
   approvers = [
@@ -45,3 +45,12 @@ resource "awsteam_approvers_ou" "this" {
 - `id` (String) The approvers ou identifier. This is the same as the ou_id.
 - `modified_by` (String) The user to last modify the item
 - `updated_at` (String) The date and time of the last time the item was updated
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+# Import using AWS OU Id
+terraform import awsteam_approvers_ou.example ou-cxt3-2782ty5g
+```
