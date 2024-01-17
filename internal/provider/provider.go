@@ -63,6 +63,7 @@ To use this provider, follow the [instructions to enable machine authentication]
 			"client_secret": schema.StringAttribute{
 				MarkdownDescription: "The client secret for authenticating to the oauth2 token endpoint. This can also be defined by setting the `AWSTEAM_CLIENT_SECRET` environment variable. Attribute is required when not configured via environment variable.",
 				Optional:            true,
+				Sensitive:           true,
 			},
 			"graph_endpoint": schema.StringAttribute{
 				MarkdownDescription: "The graph endpoint for the AWS TEAM deployment. This can also be defined by setting the `AWSTEAM_GRAPH_ENDPOINT` environment variable. Attribute is required when not configured via environment variable.",
@@ -113,6 +114,8 @@ func (p *AWSTEAMProvider) Resources(ctx context.Context) []func() resource.Resou
 	return []func() resource.Resource{
 		NewApproversAccountResource,
 		NewApproversOUResource,
+		NewEligibilityGroupResource,
+		NewEligibilityUserResource,
 		NewSettingsResource,
 	}
 }
