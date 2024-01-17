@@ -1,5 +1,10 @@
 package awsteam
 
+type Account struct {
+	Id   *int64  `json:"id,string"`
+	Name *string `json:"name"`
+}
+
 type Approvers struct {
 	Id         *string   `json:"id"`        // "Account ID" or "OU id"
 	Name       *string   `json:"name"`      // Account Name or OU Name
@@ -10,6 +15,49 @@ type Approvers struct {
 	ModifiedBy *string   `json:"modifiedBy"`
 	CreatedAt  *string   `json:"createdAt"`
 	UpdatedAt  *string   `json:"updatedAt"`
+}
+
+type Eligibility struct {
+	Id               *string                  `json:"id"`
+	Name             *string                  `json:"name"`
+	Type             *string                  `json:"type"` // "User" or "Group"
+	Accounts         []*EligibilityAccount    `json:"accounts"`
+	OUs              []*EligibilityOU         `json:"ous"`
+	Permissions      []*EligibilityPermission `json:"permissions"`
+	TicketNo         *string                  `json:"ticketNo"`
+	ApprovalRequired *bool                    `json:"approvalRequired"`
+	Duration         *int64                   `json:"duration,string"`
+	ModifiedBy       *string                  `json:"modifiedBy"`
+	CreatedAt        *string                  `json:"createdAt"`
+	UpdatedAt        *string                  `json:"updatedAt"`
+}
+
+type EligibilityAccount struct {
+	Id   *int64  `json:"id,string"`
+	Name *string `json:"name"`
+}
+
+type EligibilityOU struct {
+	Id   *string `json:"id"`
+	Name *string `json:"name"`
+}
+
+type EligibilityPermission struct {
+	Id   *string `json:"id"`
+	Name *string `json:"name"`
+}
+
+type OU struct {
+	Id       *string `json:"id"`
+	Arn      *string `json:"arn"`
+	Name     *string `json:"name"`
+	Children []OU    `json:"children"`
+}
+
+type Permission struct {
+	Name     *string
+	Arn      *string
+	Duration *string
 }
 
 type Settings struct {
