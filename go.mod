@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/YakDriver/regexache v0.23.0
 	github.com/aws/smithy-go v1.19.0
-	github.com/brianvoe/gofakeit/v6 v6.26.4
+	github.com/brianvoe/gofakeit/v6 v6.27.0
 	github.com/google/uuid v1.5.0
 	github.com/hashicorp/go-changelog v0.0.0-20230630083008-522d403eacf1
 	github.com/hashicorp/terraform-plugin-docs v0.17.0
