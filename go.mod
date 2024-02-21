@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/YakDriver/regexache v0.23.0
-	github.com/aws/smithy-go v1.20.0
+	github.com/aws/smithy-go v1.20.1
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-changelog v0.0.0-20230630083008-522d403eacf1
