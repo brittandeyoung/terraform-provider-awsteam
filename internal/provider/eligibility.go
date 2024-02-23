@@ -3,7 +3,6 @@ package provider
 import (
 	"github.com/YakDriver/regexache"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/validate"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -48,11 +47,14 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
-				"account_id": schema.Int64Attribute{
+				"account_id": schema.StringAttribute{
 					MarkdownDescription: "The AWS account id the eligibility policy will be applied to. This needs to match the account id of the name provided in account_name.",
 					Required:            true,
-					Validators: []validator.Int64{
-						validate.Int64Length(12),
+					Validators: []validator.String{
+						stringvalidator.RegexMatches(
+							regexache.MustCompile(`\d{12}`),
+							"value must be a valid aws account id.",
+						),
 					},
 				},
 				"account_name": schema.StringAttribute{
