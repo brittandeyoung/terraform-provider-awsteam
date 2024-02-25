@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ### Changes
 
 ### Fixes
+* Provider: Corrected the provider schema attribute mapping to configuration fields for `client_secret`, `graph_endpoint`, and `token_endpoint` [24](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/24)
+
 
 ### Breaks
 
