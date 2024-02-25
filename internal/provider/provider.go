@@ -87,9 +87,9 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	clientId := fieldOrEnvVar(data.ClientId, "client_id", envvar.AWSTEAMClientId, resp)
-	clientSecret := fieldOrEnvVar(data.ClientId, "client_secret", envvar.AWSTEAMClientSecret, resp)
-	graphEndpoint := fieldOrEnvVar(data.ClientId, "graph_endpoint", envvar.AWSTEAMGraphEndpoint, resp)
-	TokenEndpoint := fieldOrEnvVar(data.ClientId, "token_endpoint", envvar.AWSTEAMTokenEndpoint, resp)
+	clientSecret := fieldOrEnvVar(data.ClientSecret, "client_secret", envvar.AWSTEAMClientSecret, resp)
+	graphEndpoint := fieldOrEnvVar(data.GraphEndpoint, "graph_endpoint", envvar.AWSTEAMGraphEndpoint, resp)
+	TokenEndpoint := fieldOrEnvVar(data.TokenEndpoint, "token_endpoint", envvar.AWSTEAMTokenEndpoint, resp)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -102,7 +102,7 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 		TokenEndpoint: TokenEndpoint,
 	}
 
-	config.Build()
+	config.Build(ctx)
 
 	meta := config.NewClient(ctx)
 
@@ -142,7 +142,7 @@ func fieldOrEnvVar(field basetypes.StringValue, fieldName string, envvarName str
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Providing a value for %s is required. This can also be handled by setting the %s environment variable.", fieldName, envvarName))
 		}
 	} else {
-		value = field.String()
+		value = field.ValueString()
 	}
 	return value
 }
