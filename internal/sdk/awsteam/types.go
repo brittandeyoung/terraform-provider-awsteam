@@ -33,7 +33,7 @@ type Eligibility struct {
 }
 
 type EligibilityAccount struct {
-	Id   *int64  `json:"id,string"`
+	Id   *string `json:"id"`
 	Name *string `json:"name"`
 }
 
