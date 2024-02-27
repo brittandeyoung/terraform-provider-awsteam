@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hasura/go-graphql-client"
 	"golang.org/x/oauth2"
 )
@@ -43,11 +44,12 @@ type Config struct {
 	TokenEndpoint string
 }
 
-func (config *Config) Build() {
+func (config *Config) Build(ctx context.Context) {
 	// Configure the AWS TEAM client
 	// First we need to get a token from the oath endpoint
 	authPayload := strings.NewReader(fmt.Sprintf(`grant_type=client_credentials&scope=api%%2Fadmin&client_id=%s&client_secret=%s`, config.ClientId, config.ClientSecret))
 
+	tflog.Debug(ctx, "Preparing token request", map[string]interface{}{"token_endpoint": config.TokenEndpoint, "graph_endpoint": config.GraphEndpoint, "client_id": config.ClientId})
 	authClient := &http.Client{}
 	authReq, err := http.NewRequest("POST", config.TokenEndpoint, authPayload)
 
@@ -59,6 +61,7 @@ func (config *Config) Build() {
 	res, err := authClient.Do(authReq)
 
 	if err != nil {
+		tflog.Error(ctx, "Data provided is invalid. Unable to build request for token endpoint.")
 		panic(err)
 	}
 
@@ -67,6 +70,7 @@ func (config *Config) Build() {
 	body, err := io.ReadAll(res.Body)
 
 	if err != nil {
+		tflog.Error(ctx, "Failed to receive token from endpoint.")
 		panic(err)
 	}
 
@@ -75,6 +79,7 @@ func (config *Config) Build() {
 	err = json.Unmarshal(body, token)
 
 	if err != nil {
+		tflog.Error(ctx, "Invalid JSON in response. Unmarshalling failed.")
 		panic(err)
 	}
 

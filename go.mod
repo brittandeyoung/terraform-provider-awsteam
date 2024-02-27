@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/YakDriver/regexache v0.23.0
-	github.com/aws/smithy-go v1.20.0
+	github.com/aws/smithy-go v1.20.1
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-changelog v0.0.0-20230630083008-522d403eacf1
@@ -14,7 +14,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.21.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.6.0
-	github.com/hasura/go-graphql-client v0.11.0
+	github.com/hasura/go-graphql-client v0.12.0
 	golang.org/x/oauth2 v0.17.0
 )
 
