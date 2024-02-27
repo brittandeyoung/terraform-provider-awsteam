@@ -13,7 +13,7 @@ import (
 
 var (
 	eligibilityAccountAttrTypes = map[string]attr.Type{
-		"account_id":   types.Int64Type,
+		"account_id":   types.StringType,
 		"account_name": types.StringType,
 	}
 	eligibilityOUAttrTypes = map[string]attr.Type{
@@ -27,7 +27,7 @@ var (
 )
 
 type EligibilityAccount struct {
-	AccountId   types.Int64  `tfsdk:"account_id"`
+	AccountId   types.String `tfsdk:"account_id"`
 	AccountName types.String `tfsdk:"account_name"`
 }
 
@@ -137,7 +137,7 @@ func expandEligibilityAccounts(raw []*EligibilityAccount) []*awsteam.Eligibility
 
 	for _, v := range raw {
 		account := &awsteam.EligibilityAccount{}
-		account.Id = v.AccountId.ValueInt64Pointer()
+		account.Id = v.AccountId.ValueStringPointer()
 		account.Name = v.AccountName.ValueStringPointer()
 		accounts = append(accounts, account)
 	}
@@ -190,7 +190,7 @@ func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.
 	elems := []attr.Value{}
 	for _, account := range apiObject {
 		obj := map[string]attr.Value{
-			"account_id":   types.Int64PointerValue(account.Id),
+			"account_id":   types.StringPointerValue(account.Id),
 			"account_name": types.StringPointerValue(account.Name),
 		}
 		objVal, d := types.ObjectValue(eligibilityAccountAttrTypes, obj)
