@@ -3,6 +3,11 @@ TESTARGS                ?= "-run=TestAcc"
 
 default: testacc
 
+# Please keep targets in alphabetical order
+
+build: ## Build provider
+	go install
+
 gen:
 	go generate
 
@@ -20,6 +25,7 @@ testacc:
 	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
 
 .PHONY: 
+	- build
 	- generate
 	- golangci-lint
 	- testacc
