@@ -1,6 +1,6 @@
 module github.com/brittandeyoung/terraform-provider-awsteam
 
-go 1.20
+go 1.21
 
 require (
 	github.com/YakDriver/regexache v0.23.0
