@@ -102,7 +102,6 @@ func (r *ApproversOUResource) Schema(ctx context.Context, req resource.SchemaReq
 				Required:            true,
 				Validators: []validator.Set{
 					setvalidator.SizeAtLeast(1),
-					setvalidator.ValueStringsAre(),
 				},
 			},
 			"ticket_no": schema.StringAttribute{
