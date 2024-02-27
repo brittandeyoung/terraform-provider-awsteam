@@ -4,7 +4,7 @@ resource "awsteam_eligibility_user" "example" {
   duration          = 5
   accounts = [
     {
-      account_id   = 123456789012
+      account_id   = "123456789012"
       account_name = "My-aws-account"
     }
   ]

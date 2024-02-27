@@ -80,7 +80,7 @@ resource "awsteam_eligibility_user" "test" {
 	ticket_no = "%s"
 	accounts = [
 		{
-		account_id   = %s
+		account_id   = "%s"
 		account_name = "%s"
 		}
 	]

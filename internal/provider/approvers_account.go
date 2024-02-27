@@ -3,20 +3,17 @@ package provider
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/YakDriver/regexache"
 	"github.com/aws/smithy-go/ptr"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/validate"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -42,7 +39,7 @@ type ApproversAccountResource struct {
 
 type ApproversAccountModel struct {
 	Id          types.String `tfsdk:"id"`
-	AccountId   types.Int64  `tfsdk:"account_id"`
+	AccountId   types.String `tfsdk:"account_id"`
 	AccountName types.String `tfsdk:"account_name"`
 	Approvers   types.Set    `tfsdk:"approvers"`
 	GroupIds    types.Set    `tfsdk:"group_ids"`
@@ -81,14 +78,17 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 					),
 				},
 			},
-			"account_id": schema.Int64Attribute{
+			"account_id": schema.StringAttribute{
 				MarkdownDescription: "The AWS account id the approvers policy will be applied to. This needs to match the account id of the name provided in account_name.",
 				Required:            true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.RequiresReplace(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
-				Validators: []validator.Int64{
-					validate.Int64Length(12),
+				Validators: []validator.String{
+					stringvalidator.RegexMatches(
+						regexache.MustCompile(`\d{12}`),
+						"value must be a valid aws account id.",
+					),
 				},
 			},
 			"approvers": schema.SetAttribute{
@@ -102,12 +102,6 @@ func (r *ApproversAccountResource) Schema(ctx context.Context, req resource.Sche
 				Required:            true,
 				Validators: []validator.Set{
 					setvalidator.SizeAtLeast(1),
-					setvalidator.ValueStringsAre(
-						stringvalidator.RegexMatches(
-							regexache.MustCompile(`^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$`),
-							"Group Ids must be valid UUIDs.",
-						),
-					),
 				},
 			},
 			"ticket_no": schema.StringAttribute{
@@ -164,7 +158,7 @@ func (r *ApproversAccountResource) Create(ctx context.Context, req resource.Crea
 	}
 
 	in := &awsteam.CreateApproversInput{
-		Id:         ptr.String(fmt.Sprint(data.AccountId.ValueInt64())),
+		Id:         data.AccountId.ValueStringPointer(),
 		Type:       ptr.String(ApproversAccountType),
 		Name:       data.AccountName.ValueStringPointer(),
 		Approvers:  approvers,
@@ -294,7 +288,7 @@ func (r *ApproversAccountResource) Update(ctx context.Context, req resource.Upda
 	}
 
 	if updateRequired {
-		in.Id = ptr.String(fmt.Sprint(plan.AccountId.ValueInt64()))
+		in.Id = plan.AccountId.ValueStringPointer()
 		in.Type = ptr.String(ApproversAccountType)
 		in.Name = plan.AccountName.ValueStringPointer()
 		in.Approvers = approvers
@@ -373,14 +367,9 @@ func (d *ApproversAccountModel) flatten(ctx context.Context, out *awsteam.Approv
 		return diags
 	}
 
-	accountNumber, err := strconv.ParseInt(ptr.ToString(out.Id), 10, 64)
-	if err != nil {
-		panic(err)
-	}
-
 	d.Id = types.StringPointerValue(out.Id)
 	d.AccountName = types.StringPointerValue(out.Name)
-	d.AccountId = types.Int64Value(accountNumber)
+	d.AccountId = types.StringPointerValue(out.Id)
 	d.Approvers = approversSet
 	d.GroupIds = groupIdsSet
 	d.TicketNo = types.StringPointerValue(out.TicketNo)

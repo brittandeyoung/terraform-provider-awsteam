@@ -3,7 +3,6 @@ package provider
 import (
 	"github.com/YakDriver/regexache"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/validate"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -14,7 +13,7 @@ import (
 
 var (
 	eligibilityAccountAttrTypes = map[string]attr.Type{
-		"account_id":   types.Int64Type,
+		"account_id":   types.StringType,
 		"account_name": types.StringType,
 	}
 	eligibilityOUAttrTypes = map[string]attr.Type{
@@ -28,7 +27,7 @@ var (
 )
 
 type EligibilityAccount struct {
-	AccountId   types.Int64  `tfsdk:"account_id"`
+	AccountId   types.String `tfsdk:"account_id"`
 	AccountName types.String `tfsdk:"account_name"`
 }
 
@@ -48,11 +47,14 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
-				"account_id": schema.Int64Attribute{
+				"account_id": schema.StringAttribute{
 					MarkdownDescription: "The AWS account id the eligibility policy will be applied to. This needs to match the account id of the name provided in account_name.",
 					Required:            true,
-					Validators: []validator.Int64{
-						validate.Int64Length(12),
+					Validators: []validator.String{
+						stringvalidator.RegexMatches(
+							regexache.MustCompile(`\d{12}`),
+							"value must be a valid aws account id.",
+						),
 					},
 				},
 				"account_name": schema.StringAttribute{
@@ -135,7 +137,7 @@ func expandEligibilityAccounts(raw []*EligibilityAccount) []*awsteam.Eligibility
 
 	for _, v := range raw {
 		account := &awsteam.EligibilityAccount{}
-		account.Id = v.AccountId.ValueInt64Pointer()
+		account.Id = v.AccountId.ValueStringPointer()
 		account.Name = v.AccountName.ValueStringPointer()
 		accounts = append(accounts, account)
 	}
@@ -188,7 +190,7 @@ func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.
 	elems := []attr.Value{}
 	for _, account := range apiObject {
 		obj := map[string]attr.Value{
-			"account_id":   types.Int64PointerValue(account.Id),
+			"account_id":   types.StringPointerValue(account.Id),
 			"account_name": types.StringPointerValue(account.Name),
 		}
 		objVal, d := types.ObjectValue(eligibilityAccountAttrTypes, obj)

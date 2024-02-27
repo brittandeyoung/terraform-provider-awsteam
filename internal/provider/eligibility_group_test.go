@@ -79,7 +79,7 @@ resource "awsteam_eligibility_group" "test" {
 	ticket_no = "%s"
 	accounts = [
 		{
-		account_id   = %s
+		account_id   = "%s"
 		account_name = "%s"
 		}
 	]
