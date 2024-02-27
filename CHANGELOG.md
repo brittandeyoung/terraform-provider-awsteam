@@ -13,10 +13,22 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ### Changes
 
 ### Fixes
+
+### Breaks
+
+
+## 1.0.0 - (2024-02-27)
+---
+
+### Changes
+* Removed validators on `group_id` schema fields as they can be values other than UUID [26](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/26)
+
+### Fixes
 * Provider: Corrected the provider schema attribute mapping to configuration fields for `client_secret`, `graph_endpoint`, and `token_endpoint` [24](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/24)
 
 
 ### Breaks
+* Resources: `awsteam_eligibility_group`, `awsteam_eligibility_user`, and `awsteam_approvers_account` AWS account numbers are now string values [26](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/26)
 
 
 ## 0.2.0 - (2024-01-17)
