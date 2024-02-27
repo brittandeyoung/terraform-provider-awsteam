@@ -1,5 +1,5 @@
 resource "awsteam_approvers_account" "example" {
-  account_id   = 123456789011
+  account_id   = "123456789011"
   account_name = "my-account"
   approvers = [
     "my-group-approvers@contoso.com"
