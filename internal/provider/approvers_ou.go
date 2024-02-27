@@ -102,12 +102,7 @@ func (r *ApproversOUResource) Schema(ctx context.Context, req resource.SchemaReq
 				Required:            true,
 				Validators: []validator.Set{
 					setvalidator.SizeAtLeast(1),
-					setvalidator.ValueStringsAre(
-						stringvalidator.RegexMatches(
-							regexache.MustCompile(`^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$`),
-							"Group Ids must be valid UUIDs.",
-						),
-					),
+					setvalidator.ValueStringsAre(),
 				},
 			},
 			"ticket_no": schema.StringAttribute{
