@@ -14,7 +14,7 @@ Allows configuration of approval policies for an aws account within an AWS TEAM 
 
 ```terraform
 resource "awsteam_approvers_account" "example" {
-  account_id   = 123456789011
+  account_id   = "123456789011"
   account_name = "my-account"
   approvers = [
     "my-group-approvers@contoso.com"
@@ -30,7 +30,7 @@ resource "awsteam_approvers_account" "example" {
 
 ### Required
 
-- `account_id` (Number) The AWS account id the approvers policy will be applied to. This needs to match the account id of the name provided in account_name.
+- `account_id` (String) The AWS account id the approvers policy will be applied to. This needs to match the account id of the name provided in account_name.
 - `account_name` (String) Name of the AWS account the approvers policy will be applied to. This needs to match the name of the account id provided in account_id.
 - `approvers` (Set of String) The list of group names that will be approvers for the OU. This needs to match the names of the ids provided in group_ids.
 - `group_ids` (Set of String) The list of group names that will be approvers for the OU. This needs to match the ids of the names provided in approvers.

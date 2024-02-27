@@ -19,7 +19,7 @@ resource "awsteam_eligibility_group" "example" {
   duration          = 5
   accounts = [
     {
-      account_id   = 123456789012
+      account_id   = "123456789012"
       account_name = "My-aws-account"
     }
   ]
@@ -75,7 +75,7 @@ Required:
 
 Required:
 
-- `account_id` (Number) The AWS account id the eligibility policy will be applied to. This needs to match the account id of the name provided in account_name.
+- `account_id` (String) The AWS account id the eligibility policy will be applied to. This needs to match the account id of the name provided in account_name.
 - `account_name` (String) Name of the AWS account the eligibility policy will be applied to. This needs to match the name of the account number provided in account_id.
 
 
