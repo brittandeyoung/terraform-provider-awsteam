@@ -4,11 +4,14 @@ page_title: "awsteam_settings Resource - terraform-provider-awsteam"
 subcategory: ""
 description: |-
   Allows configuration of the settings within an AWS TEAM deployment.
+  Important: By default the settings resource will already exist on a fresh deployment of AWS TEAM and will cause a create to fail. Use the import block example below when deploying to a fresh instance of AWS TEAM to import the existing settings
 ---
 
 # awsteam_settings (Resource)
 
 Allows configuration of the settings within an AWS TEAM deployment.
+
+> **Important:** By default the `settings` resource will already exist on a fresh deployment of AWS TEAM and will cause a create to fail. Use the import block example below when deploying to a fresh instance of AWS TEAM to import the existing `settings`
 
 ## Example Usage
 
@@ -18,6 +21,12 @@ resource "awsteam_settings" "example" {
   expiry             = 3
   team_admin_group   = "My-Team-Admin-Group"
   team_auditor_group = "My-Team-Auditor-Group"
+}
+
+// Import the existing settings on a fresh install of AWS TEAM
+import {
+  to = awsteam_settings.example
+  id = "settings"
 }
 ```
 
