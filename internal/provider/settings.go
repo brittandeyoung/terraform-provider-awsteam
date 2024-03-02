@@ -54,7 +54,9 @@ func (r *SettingsResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Allows configuration of the settings within an AWS TEAM deployment.",
+		Description: "Allows configuration of the settings within an AWS TEAM deployment",
+		MarkdownDescription: "Allows configuration of the settings within an AWS TEAM deployment.\n\n" +
+			"> **Important:** By default the `settings` resource will already exist on a fresh deployment of AWS TEAM and will cause a create to fail. Use the import block example below when deploying to a fresh instance of AWS TEAM to import the existing `settings`\n",
 
 		Attributes: map[string]schema.Attribute{
 			"approval": schema.BoolAttribute{
