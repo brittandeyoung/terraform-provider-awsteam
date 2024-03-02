@@ -4,3 +4,9 @@ resource "awsteam_settings" "example" {
   team_admin_group   = "My-Team-Admin-Group"
   team_auditor_group = "My-Team-Auditor-Group"
 }
+
+// Import the existing settings on a fresh install of AWS TEAM
+import {
+  to = awsteam_settings.example
+  id = "settings"
+}
