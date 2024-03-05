@@ -30,6 +30,14 @@ func (client *Client) UpdateEligibility(ctx context.Context, in *UpdateEligibili
 		return nil, errors.New("Id is required to update Eligibility.")
 	}
 
+	if in.Accounts == nil {
+		in.Accounts = []*EligibilityAccount{}
+	}
+
+	if in.OUs == nil {
+		in.OUs = []*EligibilityOU{}
+	}
+
 	variables := map[string]interface{}{
 		"input": *in,
 	}

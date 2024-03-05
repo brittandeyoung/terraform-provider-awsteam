@@ -30,6 +30,14 @@ func (client *Client) CreateEligibility(ctx context.Context, in *CreateEligibili
 		return nil, errors.New("Id is required to create Eligibility.")
 	}
 
+	if in.Accounts == nil {
+		in.Accounts = []*EligibilityAccount{}
+	}
+
+	if in.OUs == nil {
+		in.OUs = []*EligibilityOU{}
+	}
+
 	variables := map[string]interface{}{
 		"input": *in,
 	}
