@@ -103,7 +103,6 @@ func TestAccEligibilityGroupResource_Accounts(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "approval_required", fmt.Sprint(approval1)),
 					resource.TestCheckResourceAttr(resourceName, "duration", duration),
 					resource.TestCheckResourceAttr(resourceName, "ticket_no", ticketNo),
-					resource.TestCheckNoResourceAttr(resourceName, "accounts"),
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "ous.*",
 						map[string]string{
 							"ou_id":   ouId,
@@ -195,6 +194,7 @@ resource "awsteam_eligibility_group" "test" {
 	approval_required = %t
 	duration          = %s
 	ticket_no = "%s"
+	accounts = []
 	ous = [
 		{
 		ou_id   = "%s"
