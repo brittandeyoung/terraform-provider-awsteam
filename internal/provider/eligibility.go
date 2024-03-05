@@ -44,7 +44,7 @@ type EligibilityPermission struct {
 func AccountAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS accounts the eligibility will apply to.",
-		Optional:            true,
+		Required:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"account_id": schema.StringAttribute{
@@ -75,7 +75,7 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 func OUAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS OUs the eligibility will apply to.",
-		Optional:            true,
+		Required:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"ou_id": schema.StringAttribute{
@@ -185,7 +185,7 @@ func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.
 	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
-		return types.SetNull(elemType), diags
+		return types.SetValueMust(elemType, []attr.Value{}), diags
 	}
 
 	for _, account := range apiObject {
@@ -210,7 +210,7 @@ func flattenEligibilityOUs(apiObject []*awsteam.EligibilityOU) (types.Set, diag.
 	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
-		return types.SetNull(elemType), diags
+		return types.SetValueMust(elemType, []attr.Value{}), diags
 	}
 
 	for _, ou := range apiObject {
