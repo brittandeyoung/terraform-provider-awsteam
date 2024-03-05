@@ -182,12 +182,12 @@ func expandEligibilityPermissions(raw []*EligibilityPermission) []*awsteam.Eligi
 func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.Set, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	elemType := types.ObjectType{AttrTypes: eligibilityAccountAttrTypes}
+	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
-		return types.SetValueMust(elemType, []attr.Value{}), diags
+		return types.SetNull(elemType), diags
 	}
 
-	elems := []attr.Value{}
 	for _, account := range apiObject {
 		obj := map[string]attr.Value{
 			"account_id":   types.StringPointerValue(account.Id),
@@ -207,12 +207,12 @@ func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.
 func flattenEligibilityOUs(apiObject []*awsteam.EligibilityOU) (types.Set, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	elemType := types.ObjectType{AttrTypes: eligibilityOUAttrTypes}
+	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
-		return types.SetValueMust(elemType, []attr.Value{}), diags
+		return types.SetNull(elemType), diags
 	}
 
-	elems := []attr.Value{}
 	for _, ou := range apiObject {
 		obj := map[string]attr.Value{
 			"ou_id":   types.StringPointerValue(ou.Id),
