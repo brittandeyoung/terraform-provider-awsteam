@@ -1,8 +1,13 @@
 package acctest
 
 import (
+	"context"
+	"os"
 	"testing"
 	"time"
+
+	"github.com/brittandeyoung/terraform-provider-awsteam/internal/envvar"
+	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
 )
 
 // These two functions come form the terraform-provider-aws code
@@ -29,4 +34,22 @@ func RunSerialTests2Levels(t *testing.T, testCases map[string]map[string]func(t 
 			RunSerialTests1Level(t, m, d)
 		})
 	}
+}
+
+func NewAWSTeamClient(ctx context.Context) *awsteam.Client {
+	clientId := os.Getenv(envvar.AWSTEAMClientId)
+	clientSecret := os.Getenv(envvar.AWSTEAMClientSecret)
+	graphEndpoint := os.Getenv(envvar.AWSTEAMGraphEndpoint)
+	TokenEndpoint := os.Getenv(envvar.AWSTEAMTokenEndpoint)
+
+	config := &awsteam.Config{
+		ClientId:      clientId,
+		ClientSecret:  clientSecret,
+		GraphEndpoint: graphEndpoint,
+		TokenEndpoint: TokenEndpoint,
+	}
+
+	config.Build(ctx)
+
+	return config.NewClient(ctx)
 }

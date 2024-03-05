@@ -44,7 +44,7 @@ type EligibilityPermission struct {
 func AccountAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS accounts the eligibility will apply to.",
-		Optional:            true,
+		Required:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"account_id": schema.StringAttribute{
@@ -75,7 +75,7 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 func OUAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS OUs the eligibility will apply to.",
-		Optional:            true,
+		Required:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"ou_id": schema.StringAttribute{
@@ -182,12 +182,12 @@ func expandEligibilityPermissions(raw []*EligibilityPermission) []*awsteam.Eligi
 func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.Set, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	elemType := types.ObjectType{AttrTypes: eligibilityAccountAttrTypes}
+	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
 		return types.SetValueMust(elemType, []attr.Value{}), diags
 	}
 
-	elems := []attr.Value{}
 	for _, account := range apiObject {
 		obj := map[string]attr.Value{
 			"account_id":   types.StringPointerValue(account.Id),
@@ -207,12 +207,12 @@ func flattenEligibilityAccounts(apiObject []*awsteam.EligibilityAccount) (types.
 func flattenEligibilityOUs(apiObject []*awsteam.EligibilityOU) (types.Set, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	elemType := types.ObjectType{AttrTypes: eligibilityOUAttrTypes}
+	elems := []attr.Value{}
 
 	if len(apiObject) == 0 {
 		return types.SetValueMust(elemType, []attr.Value{}), diags
 	}
 
-	elems := []attr.Value{}
 	for _, ou := range apiObject {
 		obj := map[string]attr.Value{
 			"ou_id":   types.StringPointerValue(ou.Id),

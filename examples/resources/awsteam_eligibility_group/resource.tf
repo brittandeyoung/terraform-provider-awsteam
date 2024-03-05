@@ -1,5 +1,6 @@
 resource "awsteam_eligibility_group" "example" {
   group_name        = "my-group@contoso.com"
+  group_id          = "d78686b5-bb78-471c-8b2f-817e70e3158b"
   approval_required = true
   duration          = 5
   accounts = [

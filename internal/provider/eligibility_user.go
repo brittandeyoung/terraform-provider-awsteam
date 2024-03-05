@@ -9,7 +9,6 @@ import (
 	"github.com/aws/smithy-go/ptr"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
-	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -41,6 +40,7 @@ type EligibilityUserResource struct {
 type EligibilityUserModel struct {
 	Id               types.String `tfsdk:"id"`
 	UserName         types.String `tfsdk:"user_name"`
+	UserId           types.String `tfsdk:"user_id"`
 	Accounts         types.Set    `tfsdk:"accounts"`
 	OUs              types.Set    `tfsdk:"ous"`
 	Permissions      types.Set    `tfsdk:"permissions"`
@@ -83,6 +83,13 @@ func (r *EligibilityUserResource) Schema(ctx context.Context, req resource.Schem
 						regexache.MustCompile(`[\s\S]*`),
 						"value must be a valid aws user name.",
 					),
+				},
+			},
+			"user_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the AWS iam identity center user the eligibility policy will be applied to.",
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"duration": schema.Int64Attribute{
@@ -153,7 +160,7 @@ func (r *EligibilityUserResource) Create(ctx context.Context, req resource.Creat
 	}
 
 	in := &awsteam.CreateEligibilityInput{
-		Id:               ptr.String(fmt.Sprint(uuid.New())),
+		Id:               data.UserId.ValueStringPointer(),
 		Type:             ptr.String(EligibilityUserType),
 		Name:             data.UserName.ValueStringPointer(),
 		ApprovalRequired: data.ApprovalRequired.ValueBoolPointer(),
@@ -213,12 +220,14 @@ func (r *EligibilityUserResource) Read(ctx context.Context, req resource.ReadReq
 	}
 
 	if out == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Eligibility.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Eligibility. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
 	if out.Eligibility == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Eligibility.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Eligibility. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
@@ -371,6 +380,7 @@ func (d *EligibilityUserModel) flatten(out *awsteam.Eligibility) diag.Diagnostic
 
 	d.Id = types.StringPointerValue(out.Id)
 	d.UserName = types.StringPointerValue(out.Name)
+	d.UserId = types.StringPointerValue(out.Id)
 	d.Accounts = accountsSet
 	d.OUs = ousSet
 	d.Permissions = permissionsSet

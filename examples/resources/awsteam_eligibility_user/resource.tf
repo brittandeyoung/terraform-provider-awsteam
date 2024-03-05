@@ -1,5 +1,6 @@
 resource "awsteam_eligibility_user" "example" {
   user_name         = "my-user@contoso.com"
+  user_id           = "d78686b5-bb78-471c-8b2f-817e70e3158b"
   approval_required = true
   duration          = 5
   accounts = [

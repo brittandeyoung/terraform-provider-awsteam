@@ -17,6 +17,15 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ### Breaks
 
 
+## 1.0.1 - (2024-03-05)
+---
+
+### Fixes
+* Resource: `awsteam_eligibility_group` now requires the `group_id` field. This will be used as the resource `id`. [36](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/36)
+* Resource: `awsteam_eligibility_user` now requires the `user_id` field. This will be used as the resource `id`. [36](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/36)
+* Resources: `awsteam_eligibility_group`, `awsteam_eligibility_user`, `awsteam_approvers_account`, `awsteam_approvers_ou`, and `awsteam_settings` Deleting outside of terraform will no longer cause terraform to error.
+
+
 ## 1.0.0 - (2024-02-27)
 ---
 

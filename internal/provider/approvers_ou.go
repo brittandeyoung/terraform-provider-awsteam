@@ -215,12 +215,14 @@ func (r *ApproversOUResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 
 	if out == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Approvers.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Approvers. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
 	if out.Approvers == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Approvers.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Approvers. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 

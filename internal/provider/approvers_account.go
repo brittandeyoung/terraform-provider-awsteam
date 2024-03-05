@@ -175,12 +175,14 @@ func (r *ApproversAccountResource) Create(ctx context.Context, req resource.Crea
 	}
 
 	if out == nil {
-		resp.Diagnostics.AddError("Create Error", "Received empty Approvers.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Approvers. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
 	if out.Approvers == nil {
-		resp.Diagnostics.AddError("Create Error", "Received empty Approvers.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Approvers. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
