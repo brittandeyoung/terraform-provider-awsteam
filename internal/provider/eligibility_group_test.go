@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -9,9 +10,12 @@ import (
 )
 
 func TestAccEligibilityGroupResource_basic(t *testing.T) {
+	ctx := context.Background()
 	resourceName := "awsteam_eligibility_group.test"
-	user1 := gofakeit.Email()
-	user2 := gofakeit.Email()
+	group1 := gofakeit.Email()
+	group2 := gofakeit.Email()
+	groupId1 := gofakeit.UUID()
+	groupId2 := gofakeit.UUID()
 	approval1 := true
 	approval2 := false
 	duration := fmt.Sprint(gofakeit.Number(1, 10))
@@ -28,10 +32,12 @@ func TestAccEligibilityGroupResource_basic(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEligibilityGroupResourceConfig(user1, approval1, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName),
+				Config: testAccEligibilityGroupResourceConfig(group1, groupId1, approval1, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceName, "id"),
-					resource.TestCheckResourceAttr(resourceName, "group_name", user1),
+					testAccEligibilityResourceExists(ctx, resourceName),
+					resource.TestCheckResourceAttr(resourceName, "id", groupId1),
+					resource.TestCheckResourceAttr(resourceName, "group_id", groupId1),
+					resource.TestCheckResourceAttr(resourceName, "group_name", group1),
 					resource.TestCheckResourceAttr(resourceName, "approval_required", fmt.Sprint(approval1)),
 					resource.TestCheckResourceAttr(resourceName, "duration", duration),
 					resource.TestCheckResourceAttr(resourceName, "ticket_no", ticketNo),
@@ -60,9 +66,9 @@ func TestAccEligibilityGroupResource_basic(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccEligibilityGroupResourceConfig(user2, approval2, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName),
+				Config: testAccEligibilityGroupResourceConfig(group2, groupId2, approval2, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "group_name", user2),
+					resource.TestCheckResourceAttr(resourceName, "group_name", group2),
 					resource.TestCheckResourceAttr(resourceName, "approval_required", fmt.Sprint(approval2)),
 				),
 			},
@@ -70,10 +76,42 @@ func TestAccEligibilityGroupResource_basic(t *testing.T) {
 	})
 }
 
-func testAccEligibilityGroupResourceConfig(user string, approvalRequired bool, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName string) string {
+func TestAccEligibilityGroupResource_disappears(t *testing.T) {
+	ctx := context.Background()
+	resourceName := "awsteam_eligibility_group.test"
+	group1 := gofakeit.Email()
+	groupId := gofakeit.UUID()
+	approval1 := true
+	duration := fmt.Sprint(gofakeit.Number(1, 10))
+	ticketNo := gofakeit.BS()
+	accountId := gofakeit.DigitN(12)
+	accountName := gofakeit.BS()
+	ouId := "ou-cxt3-2782ty5g" // hard coded fake ou id
+	ouName := gofakeit.BS()
+	permissionArn := "arn:aws:sso:::permissionSet/ssoins-4334d1f197f50907/ps-f5ge203d3d2428d3" // hard coded fake arn
+	permissionName := "elevated"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEligibilityGroupResourceConfig(group1, groupId, approval1, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccEligibilityResourceExists(ctx, resourceName),
+					testAccEligibilityResourceDisappears(ctx, resourceName),
+				),
+				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}
+
+func testAccEligibilityGroupResourceConfig(group string, groupId string, approvalRequired bool, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName string) string {
 	return fmt.Sprintf(`
 resource "awsteam_eligibility_group" "test" {
 	group_name         = "%s"
+	group_id = "%s"
 	approval_required = %t
 	duration          = %s
 	ticket_no = "%s"
@@ -95,5 +133,5 @@ resource "awsteam_eligibility_group" "test" {
 		permission_name = "%s"
 		}
 	]
-}`, user, approvalRequired, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName)
+}`, group, groupId, approvalRequired, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName)
 }
