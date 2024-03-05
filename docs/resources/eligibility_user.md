@@ -15,6 +15,7 @@ Allows configuration of eligibility policies for an aws iam identity center user
 ```terraform
 resource "awsteam_eligibility_user" "example" {
   user_name         = "my-user@contoso.com"
+  user_id           = "d78686b5-bb78-471c-8b2f-817e70e3158b"
   approval_required = true
   duration          = 5
   accounts = [
@@ -46,6 +47,7 @@ resource "awsteam_eligibility_user" "example" {
 - `approval_required` (Boolean) Determines if approval is required for elevated access
 - `duration` (Number) The maximum elevated access request duration in hours.
 - `permissions` (Attributes Set) A list of AWS permission sets for the eligibility policy. (see [below for nested schema](#nestedatt--permissions))
+- `user_id` (String) Id of the AWS iam identity center user the eligibility policy will be applied to.
 - `user_name` (String) Name of the AWS iam identity center user the eligibility policy will be applied to.
 
 ### Optional
