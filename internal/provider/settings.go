@@ -240,12 +240,14 @@ func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 
 	if out == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Settings.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Settings. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
 	if out.Settings == nil {
-		resp.Diagnostics.AddError("Read Error", "Received empty Settings.")
+		resp.Diagnostics.AddWarning("Read Error", "Received empty Settings. Removing from state.")
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
