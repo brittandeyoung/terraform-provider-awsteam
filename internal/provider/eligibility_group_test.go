@@ -76,6 +76,57 @@ func TestAccEligibilityGroupResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccEligibilityGroupResource_Accounts(t *testing.T) {
+	ctx := context.Background()
+	resourceName := "awsteam_eligibility_group.test"
+	group1 := gofakeit.Email()
+	groupId1 := gofakeit.UUID()
+	approval1 := true
+	duration := fmt.Sprint(gofakeit.Number(1, 10))
+	ticketNo := gofakeit.BS()
+	ouId := "ou-cxt3-2782ty5g" // hard coded fake ou id
+	ouName := gofakeit.BS()
+	permissionArn := "arn:aws:sso:::permissionSet/ssoins-4334d1f197f50907/ps-f5ge203d3d2428d3" // hard coded fake arn
+	permissionName := "elevated"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEligibilityGroupResourceConfigNoAccounts(group1, groupId1, approval1, duration, ticketNo, ouId, ouName, permissionArn, permissionName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccEligibilityResourceExists(ctx, resourceName),
+					resource.TestCheckResourceAttr(resourceName, "id", groupId1),
+					resource.TestCheckResourceAttr(resourceName, "group_id", groupId1),
+					resource.TestCheckResourceAttr(resourceName, "group_name", group1),
+					resource.TestCheckResourceAttr(resourceName, "approval_required", fmt.Sprint(approval1)),
+					resource.TestCheckResourceAttr(resourceName, "duration", duration),
+					resource.TestCheckResourceAttr(resourceName, "ticket_no", ticketNo),
+					resource.TestCheckNoResourceAttr(resourceName, "accounts"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "ous.*",
+						map[string]string{
+							"ou_id":   ouId,
+							"ou_name": ouName,
+						}),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "permissions.*",
+						map[string]string{
+							"permission_arn":  permissionArn,
+							"permission_name": permissionName,
+						}),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccEligibilityGroupResource_disappears(t *testing.T) {
 	ctx := context.Background()
 	resourceName := "awsteam_eligibility_group.test"
@@ -134,4 +185,27 @@ resource "awsteam_eligibility_group" "test" {
 		}
 	]
 }`, group, groupId, approvalRequired, duration, ticketNo, accountId, accountName, ouId, ouName, permissionArn, permissionName)
+}
+
+func testAccEligibilityGroupResourceConfigNoAccounts(group string, groupId string, approvalRequired bool, duration, ticketNo, ouId, ouName, permissionArn, permissionName string) string {
+	return fmt.Sprintf(`
+resource "awsteam_eligibility_group" "test" {
+	group_name         = "%s"
+	group_id = "%s"
+	approval_required = %t
+	duration          = %s
+	ticket_no = "%s"
+	ous = [
+		{
+		ou_id   = "%s"
+		ou_name = "%s"
+		}
+	]
+	permissions = [
+		{
+		permission_arn   = "%s"
+		permission_name = "%s"
+		}
+	]
+}`, group, groupId, approvalRequired, duration, ticketNo, ouId, ouName, permissionArn, permissionName)
 }
