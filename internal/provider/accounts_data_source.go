@@ -34,11 +34,6 @@ type AccountsModel struct {
 	Accounts types.Set    `tfsdk:"accounts"`
 }
 
-type AccountModel struct {
-	Id   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
-}
-
 func (d *AccountsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_accounts"
 }
@@ -114,13 +109,13 @@ func (d *AccountsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	data.flatten(ctx, out)
+	data.flatten(out)
 	tflog.Trace(ctx, "read settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *AccountsModel) flatten(ctx context.Context, out *awsteam.GetAccountsOutput) diag.Diagnostics {
+func (d *AccountsModel) flatten(out *awsteam.GetAccountsOutput) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	accountsSet, diags := flattenAccounts(out.Accounts)
