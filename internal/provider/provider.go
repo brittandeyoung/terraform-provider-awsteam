@@ -119,6 +119,7 @@ func (p *AWSTEAMProvider) Resources(ctx context.Context) []func() resource.Resou
 
 func (p *AWSTEAMProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewAccountsDataSource,
 		NewSettingsDataSource,
 	}
 }
