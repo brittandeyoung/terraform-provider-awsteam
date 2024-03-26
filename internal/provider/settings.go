@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"reflect"
 
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
 	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
@@ -278,36 +279,27 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 
 	updateRequired := false
 
-	in := &awsteam.UpdateSettingsInput{
-		TeamAdminGroup:            plan.TeamAdminGroup.ValueStringPointer(),
-		TeamAuditorGroup:          plan.TeamAuditorGroup.ValueStringPointer(),
-		Approval:                  plan.Approval.ValueBoolPointer(),
-		Comments:                  plan.Comments.ValueBoolPointer(),
-		SesNotificationsEnabled:   plan.SesNotificationsEnabled.ValueBoolPointer(),
-		SnsNotificationsEnabled:   plan.SnsNotificationsEnabled.ValueBoolPointer(),
-		SlackNotificationsEnabled: plan.SlackNotificationsEnabled.ValueBoolPointer(),
-		TicketNo:                  plan.TicketNo.ValueBoolPointer(),
-		Duration:                  plan.Duration.ValueInt64Pointer(),
-		Expiry:                    plan.Expiry.ValueInt64Pointer(),
-		ModifiedBy:                plan.ModifiedBy.ValueStringPointer(),
-	}
-
-	if !plan.SesSourceArn.IsUnknown() && !state.SesSourceArn.Equal(plan.SesSourceArn) {
+	if !reflect.DeepEqual(state, plan) {
 		updateRequired = true
-		in.SesSourceArn = plan.SesSourceArn.ValueStringPointer()
-	}
-
-	if !plan.SesSourceEmail.IsUnknown() && !state.SesSourceEmail.Equal(plan.SesSourceEmail) {
-		updateRequired = true
-		in.SesSourceEmail = plan.SesSourceEmail.ValueStringPointer()
-	}
-
-	if !plan.SlackToken.IsUnknown() && !state.SlackToken.Equal(plan.SlackToken) {
-		updateRequired = true
-		in.SlackToken = plan.SlackToken.ValueStringPointer()
 	}
 
 	if updateRequired {
+		in := &awsteam.UpdateSettingsInput{
+			TeamAdminGroup:            plan.TeamAdminGroup.ValueStringPointer(),
+			TeamAuditorGroup:          plan.TeamAuditorGroup.ValueStringPointer(),
+			Approval:                  plan.Approval.ValueBoolPointer(),
+			Comments:                  plan.Comments.ValueBoolPointer(),
+			SesNotificationsEnabled:   plan.SesNotificationsEnabled.ValueBoolPointer(),
+			SnsNotificationsEnabled:   plan.SnsNotificationsEnabled.ValueBoolPointer(),
+			SlackNotificationsEnabled: plan.SlackNotificationsEnabled.ValueBoolPointer(),
+			TicketNo:                  plan.TicketNo.ValueBoolPointer(),
+			Duration:                  plan.Duration.ValueInt64Pointer(),
+			Expiry:                    plan.Expiry.ValueInt64Pointer(),
+			ModifiedBy:                plan.ModifiedBy.ValueStringPointer(),
+			SesSourceArn:              plan.SesSourceArn.ValueStringPointer(),
+			SesSourceEmail:            plan.SesSourceEmail.ValueStringPointer(),
+			SlackToken:                plan.SlackToken.ValueStringPointer(),
+		}
 
 		out, err := r.client.UpdateSettings(ctx, in)
 
