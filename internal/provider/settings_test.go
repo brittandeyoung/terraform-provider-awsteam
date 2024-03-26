@@ -25,7 +25,8 @@ func TestAccSettings_serial(t *testing.T) {
 
 	testCases := map[string]map[string]func(t *testing.T){
 		"Resource": {
-			"basic": testAccSettingsResource_basic,
+			"basic":    testAccSettingsResource_basic,
+			"duration": testAccSettingsResource_duration,
 		},
 		"DataSource": {
 			"basic": testAccSettingsDataSource_basic,
@@ -73,6 +74,43 @@ func testAccSettingsResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "team_admin_group", teamAdminGroup2),
 					resource.TestCheckResourceAttr(resourceName, "team_auditor_group", teamAuditorGroup2)),
+			},
+		},
+	})
+}
+
+func testAccSettingsResource_duration(t *testing.T) {
+	resourceName := "awsteam_settings.test"
+	teamAdminGroup := "Team-Admin-Group"
+	teamAuditorGroup := "Team-Auditor-Group"
+	duration := rand.Intn(10)
+	duration2 := rand.Intn(10)
+	expiry := rand.Intn(10)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSettingsResourceConfig(teamAdminGroup, teamAuditorGroup, duration, expiry),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration)),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccSettingsResourceConfig(teamAdminGroup, teamAuditorGroup, duration2, expiry),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration2)),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+				),
 			},
 		},
 	})
