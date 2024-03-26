@@ -81,18 +81,15 @@ func testAccSettingsResource_basic(t *testing.T) {
 
 func testAccSettingsResource_duration(t *testing.T) {
 	resourceName := "awsteam_settings.test"
-	teamAdminGroup := "Team-Admin-Group"
-	teamAuditorGroup := "Team-Auditor-Group"
 	duration := rand.Intn(10)
 	duration2 := rand.Intn(10)
-	expiry := rand.Intn(10)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSettingsResourceConfig(teamAdminGroup, teamAuditorGroup, duration, expiry),
+				Config: testAccSettingsResourceConfigDuration(duration),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration)),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -105,7 +102,7 @@ func testAccSettingsResource_duration(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccSettingsResourceConfig(teamAdminGroup, teamAuditorGroup, duration2, expiry),
+				Config: testAccSettingsResourceConfigDuration(duration2),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration2)),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -125,4 +122,15 @@ resource "awsteam_settings" "test" {
   expiry = %d
 }
 `, teamAdminGroup, teamAuditorGroup, duration, expiry)
+}
+
+func testAccSettingsResourceConfigDuration(duration int) string {
+	return fmt.Sprintf(`
+resource "awsteam_settings" "test" {
+  team_admin_group = "Team-Admin-Group"
+  team_auditor_group = "Team-Auditor-Group"
+  duration = %d
+  expiry = 5
+}
+`, duration)
 }
