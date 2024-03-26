@@ -9,13 +9,23 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ---
 
 ### New
-* DataSource: `awsteam_accounts` [#44](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/44)
 
 ### Changes
 
 ### Fixes
 
 ### Breaks
+
+
+## 1.1.0 - (2024-03-26)
+---
+
+### New
+* DataSource: `awsteam_accounts` [#44](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/44)
+
+
+### Fixes
+* Resource: `awsteam_settings` - resolved update flow failing to set computed values [#41](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/41)
 
 
 ## 1.0.1 - (2024-03-05)

@@ -25,7 +25,8 @@ func TestAccSettings_serial(t *testing.T) {
 
 	testCases := map[string]map[string]func(t *testing.T){
 		"Resource": {
-			"basic": testAccSettingsResource_basic,
+			"basic":    testAccSettingsResource_basic,
+			"duration": testAccSettingsResource_duration,
 		},
 		"DataSource": {
 			"basic": testAccSettingsDataSource_basic,
@@ -78,6 +79,40 @@ func testAccSettingsResource_basic(t *testing.T) {
 	})
 }
 
+func testAccSettingsResource_duration(t *testing.T) {
+	resourceName := "awsteam_settings.test"
+	duration := rand.Intn(10)
+	duration2 := rand.Intn(10)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSettingsResourceConfigDuration(duration),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration)),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccSettingsResourceConfigDuration(duration2),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "duration", fmt.Sprint(duration2)),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+				),
+			},
+		},
+	})
+}
+
 func testAccSettingsResourceConfig(teamAdminGroup string, teamAuditorGroup string, duration int, expiry int) string {
 	return fmt.Sprintf(`
 resource "awsteam_settings" "test" {
@@ -87,4 +122,15 @@ resource "awsteam_settings" "test" {
   expiry = %d
 }
 `, teamAdminGroup, teamAuditorGroup, duration, expiry)
+}
+
+func testAccSettingsResourceConfigDuration(duration int) string {
+	return fmt.Sprintf(`
+resource "awsteam_settings" "test" {
+  team_admin_group = "Team-Admin-Group"
+  team_auditor_group = "Team-Auditor-Group"
+  duration = %d
+  expiry = 5
+}
+`, duration)
 }
