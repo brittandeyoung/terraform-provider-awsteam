@@ -1,7 +1,7 @@
 package awsteam
 
 type Account struct {
-	Id   *int64  `json:"id,string"`
+	Id   *string `json:"id"`
 	Name *string `json:"name"`
 }
 
@@ -18,7 +18,7 @@ type Approvers struct {
 }
 
 type Eligibility struct {
-	Id               *string                  `json:"id"`
+	Id               *string                  `json:"id"` // User or Group Id
 	Name             *string                  `json:"name"`
 	Type             *string                  `json:"type"` // "User" or "Group"
 	Accounts         []*EligibilityAccount    `json:"accounts"`

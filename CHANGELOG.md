@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 ---
 
 ### New
+* DataSource: `awsteam_accounts` [#44](https://github.com/brittandeyoung/terraform-provider-awsteam/issues/44)
 
 ### Changes
 
